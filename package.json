@@ -4,11 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AranduTech/react-laravel-mui-admin.git"
   },
   "author": "",
   "license": "ISC",
+  "homepage": "https://github.com/AranduTech/react-laravel-mui-admin#readme",
   "devDependencies": {
     "typescript": "^5.0.4"
-  }
+  },
+  "files": [
+    "lib/**/*"
+  ]
 }
