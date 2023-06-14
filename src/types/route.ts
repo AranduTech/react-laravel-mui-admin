@@ -1,0 +1,1 @@
+export type RouteReplacer = false | Record<string, string | number>;
