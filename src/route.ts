@@ -14,7 +14,7 @@ public function showPage(\\App\\Services\\React $react) {
 }
 \`\`\`
 If you are trying to check if a route exists, use 'route.exists("${name}")' instead.`);
-        return null;
+        throw new Error(`Route data for '${name}' was not found.`);
     }
 
     const { dataset } = el;
@@ -22,7 +22,7 @@ If you are trying to check if a route exists, use 'route.exists("${name}")' inst
     let { value: url } = dataset;
 
     if (!url) {
-        return null;
+        throw new Error(`Route data for '${name}' was not found.`);
     }
 
     // Remove leading and trailing slashes
