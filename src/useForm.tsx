@@ -5,9 +5,9 @@ import { dotAccessor, dotExists, dotSetter } from './support/object';
 
 import axios from 'axios';
 import {
-    AutocompletePropsCallback, AutocompletePropsOptions, CheckPropsCallback, FormError, FormPropsCallback,
-    FormState,
-    InputPropsCallback, SetPropCallback, TextFieldPropsCallback, UseFormOptions
+    AutocompletePropsCallback, AutocompletePropsOptions, CheckPropsCallback, FormError, 
+    FormPropsCallback, FormState, InputPropsCallback, SetPropCallback, TextFieldPropsCallback,
+    UseFormOptions
 } from './types/form';
 
 const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'number', 'boolean'].includes(typeof value)
@@ -29,6 +29,7 @@ const getAutocompleteProps = ({
     const { textFieldProps = {}, ...rest } = options || {};
 
     return {
+        name: key,
         value: dotAccessor(data, key),
         onChange: (_: any, value: any) => {
             setProp(key, value);

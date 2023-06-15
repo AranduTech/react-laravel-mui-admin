@@ -80,7 +80,7 @@ export interface ModelSchema {
 
 export declare class Model extends BaseModel {
     constructor(attributes?: ModelConstructorAttributes);
-    getSchemaName(): string;
-    getSchema(): ModelSchemaAttributes;
+    static getSchemaName(): string;
+    static getSchema(): ModelSchemaAttributes;
     [key: string]: any,
 }

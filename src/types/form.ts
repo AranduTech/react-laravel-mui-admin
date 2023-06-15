@@ -48,7 +48,7 @@ export type CheckPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallbac
 
 // Autocomplete Props
 export interface AutocompleteProps {
-    // name: string;
+    name: string;
     value: object | object[];
     onChange: Function;
     isOptionEqualToValue: Function;
