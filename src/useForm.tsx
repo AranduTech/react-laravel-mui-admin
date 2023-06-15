@@ -5,9 +5,10 @@ import { dotAccessor, dotExists, dotSetter } from './support/object';
 
 import axios from 'axios';
 import {
-    AutocompletePropsCallback, AutocompletePropsOptions, CheckPropsCallback, FormError, 
+    AutocompletePropsCallback, AutocompletePropsOptions, CheckPropsCallback, FormError,
     FormPropsCallback, FormState, InputPropsCallback, SetPropCallback, TextFieldPropsCallback,
-    UseFormOptions
+    UseFormOptions,
+    UseFormTools
 } from './types/form';
 
 const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'number', 'boolean'].includes(typeof value)
@@ -84,7 +85,7 @@ const getAutocompleteProps = ({
  * @throws - Se `initialValues` não for um objeto com strings,
  * números, booleans, null, Date, File, Array ou FileList.
  */
-export default (options: UseFormOptions = {}, dependencies = []) => {
+export default (options: UseFormOptions = {}, dependencies = []): UseFormTools => {
     const {
         initialValues: initialValuesOption = {}, onSubmit: onSubmitFn = () => null,
         validate: validateFn = () => [], validateOnInputChange = false, preventDefault = true,
@@ -190,7 +191,7 @@ export default (options: UseFormOptions = {}, dependencies = []) => {
         });
     }, [preventStructureChange, initialValues, debug, validateOnInputChange, onChange, validate]);
 
-    const autocompleteProps: AutocompletePropsCallback = React.useCallback(
+    const autocompleteProps: AutocompletePropsCallback<any> = React.useCallback(
         (key, options) => getAutocompleteProps({
             data, setProp, errors, options,
         }, key),

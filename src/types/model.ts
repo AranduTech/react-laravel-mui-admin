@@ -1,4 +1,5 @@
 
+import { Grid2Props } from "@mui/material";
 import { BaseModel } from "../internals/BaseModel";
 import { ModelRepository } from "../internals/singletons/ModelRepository";
 
@@ -42,16 +43,29 @@ export type ModelUseDataCallback = (options?: ModelUseDataOptions) => [data: obj
 
 export interface ModelField {
     name: string,
-    type?: string,
+    type?: 'label' | 'text' | 'email' | 'password' | 'tel' | 'number' | 'date' | 'checkbox' | 'radio' | 'select' | 'file' | 'textarea' | 'autocomplete',
     label?: string,
     initialValue?: any,
     required?: boolean,
     disabled?: boolean,
-    options?: Array<{ label: string, value: string | number }>,
+    options?: Array<any>,
     list?: string | {},
     multiline?: boolean,
     multiple?: boolean,
-    rows?: number
+    rows?: number,
+    labeledBy?: string,
+    cached?: boolean,
+    debounce?: number,
+    _meta?: {
+        model: string,
+        schema: string,
+    },
+    gridItem?: Grid2Props,
+}
+
+export interface ModelTableColumnDefinition {
+    key: string,
+    label: string,
 }
 
 export interface ModelSchemaAttributes {
@@ -66,10 +80,7 @@ export interface ModelSchemaAttributes {
         }
     },
     tables: {
-        [tableName: string]: Array<{
-            key: string,
-            label: string,
-        }>
+        [tableName: string]: Array<ModelTableColumnDefinition>
     },
     web: string[],
 }

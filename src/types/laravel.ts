@@ -20,3 +20,5 @@ export interface LaravelPaginatedResponse {
     total: number;
 }
 
+export interface LaravelItemResponse extends ModelConstructorAttributes { }
+
