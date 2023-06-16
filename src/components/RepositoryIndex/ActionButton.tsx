@@ -13,6 +13,7 @@ import doAction from '../../doAction';
 export interface ActionItem {
     name: string;
     label: string;
+    icon?: string;
 }
 
 export interface ActionButtonProps {

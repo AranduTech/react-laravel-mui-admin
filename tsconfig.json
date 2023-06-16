@@ -1,18 +1,28 @@
 {
     "compilerOptions": {
-        "target": "ES2022",
+        "lib": [
+            "DOM",
+            "ES2022",
+            "Webworker.Iterable"
+        ],
+        "allowSyntheticDefaultImports": true,
+        "target": "es6",
         "module": "commonjs",
+        "moduleResolution": "node",
         "declaration": true,
         "outDir": "./lib",
         "strict": true,
         "esModuleInterop": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        /* Advanced Options */
+        "skipLibCheck": true /* Skip type checking of declaration files. */,
+        "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
     },
     "include": [
         "src"
     ],
     "exclude": [
-        "node_modules/*",
+        "node_modules",
         "**/__tests__/*"
     ],
 }

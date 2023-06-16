@@ -2,6 +2,7 @@
 import { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteRenderInputParams, TextFieldProps as MuiTextFieldProps, SelectChangeEvent } from '@mui/material';
 import { ModelField } from './model';
 import { ReactNode } from 'react';
+import { Method } from 'axios';
 
 
 // Primitive Value
@@ -108,7 +109,7 @@ export interface UseFormOptions {
     debug?: boolean;
     onError?: (error: any) => void;
     action?: string;
-    method?: string;
+    method?: Method;
     onSuccess?: (response: any) => void;
     transformPayload?: (payload: FormState) => any;
     preventStructureChange?: boolean;

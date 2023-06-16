@@ -139,6 +139,7 @@ const RecursiveList = ({
                     sx={{ pl: collapsed ? 0 : 2, pb: 0 }}
                     anchorEl={anchorEl}
                     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    RecursiveList={RecursiveList}
                     onClose={() => {
                         setAnchorEl(null);
                         setDropItems(null);

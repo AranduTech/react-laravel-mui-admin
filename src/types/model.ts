@@ -83,6 +83,7 @@ export interface ModelSchemaAttributes {
         [tableName: string]: Array<ModelTableColumnDefinition>
     },
     web: string[],
+    softDelete?: boolean,
 }
 
 export interface ModelSchema {

@@ -14,10 +14,11 @@ export type RecursiveMenuProps = MenuProps & {
     collapsed?: boolean;
     items: MenuItemObject[];
     onClick?: (e: any) => void;
+    RecursiveList: typeof RecursiveList;
 }
 
 const RecursiveMenu = ({
-    collapsed = false, items, onClick,
+    collapsed = false, items, onClick, RecursiveList,
     ...props
 }: RecursiveMenuProps) => {
     const [childrenOpen, setChildrenOpen] = React.useState<{ [key: string]: Element | null }>({});
