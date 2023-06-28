@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 
-export default <T = any>(options: AxiosRequestConfig) => {
+const useApiRequest = <T = any>(options: AxiosRequestConfig) => {
     const {
         url,
         method = 'GET',
@@ -42,3 +42,5 @@ export default <T = any>(options: AxiosRequestConfig) => {
         response, error, loading, refresh,
     };
 };
+
+export default useApiRequest;

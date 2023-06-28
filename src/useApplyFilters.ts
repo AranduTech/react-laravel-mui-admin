@@ -9,7 +9,9 @@ import applyFilters from './applyFilters';
  * @param args - Argumentos do filtro.
  * @return  - Valor filtrado.
  */
-export default (filter: string, value: any, ...args: any[]) => React.useMemo(
+const useApplyFilters = (filter: string, value: any, ...args: any[]) => React.useMemo(
     () => applyFilters(filter, value, ...args),
     [filter, value, ...args],
 );
+
+export default useApplyFilters;

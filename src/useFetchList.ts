@@ -17,7 +17,7 @@ interface UseFetchListOptions {
  * @param options - Opções.
  * @return - Dados da requisição.
  */
-export default (Model: typeof ModelClass, options?: UseFetchListOptions) => {
+const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) => {
     const { ignoreSearchParams = [] } = options || {};
 
     const [searchParams, setSearchParams] = useSearchParams(new URL(document.location.toString()).searchParams);
@@ -121,3 +121,5 @@ export default (Model: typeof ModelClass, options?: UseFetchListOptions) => {
 
     };
 };
+
+export default useFetchList;

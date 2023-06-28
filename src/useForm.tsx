@@ -85,7 +85,7 @@ const getAutocompleteProps = ({
  * @throws - Se `initialValues` não for um objeto com strings,
  * números, booleans, null, Date, File, Array ou FileList.
  */
-export default (options: UseFormOptions = {}, dependencies = []): UseFormTools => {
+const useForm = (options: UseFormOptions = {}, dependencies = []): UseFormTools => {
     const {
         initialValues: initialValuesOption = {}, onSubmit: onSubmitFn = () => null,
         validate: validateFn = () => [], validateOnInputChange = false, preventDefault = true,
@@ -109,39 +109,6 @@ export default (options: UseFormOptions = {}, dependencies = []): UseFormTools =
     const onSuccess = React.useCallback(onSuccessFn, dependencies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const transformPayload = React.useCallback(transformPayloadFn, dependencies);
-
-    // check if every value in `initialValues` is a simple primitive,
-    // null, `Array`, `Date` or `File`|`FileList`
-    const isInitialValuesValid = Object.values(initialValues)
-        .every(checkIfValueIsValid);
-
-    if (!isInitialValuesValid) {
-        // find error keys and values
-        const errorKeys = Object.entries(initialValues)
-            // eslint-disable-next-line no-unused-vars
-            .filter(([_, value]) => !checkIfValueIsValid(value))
-            .map(([key]) => key);
-        const errorValues = Object.entries(initialValues)
-            // eslint-disable-next-line no-unused-vars
-            .filter(([_, value]) => !checkIfValueIsValid(value))
-            // eslint-disable-next-line no-unused-vars
-            .map(([_, value]) => value);
-
-        if (debug) {
-            // eslint-disable-next-line no-console
-            console.debug(
-                '[useForm] The following values are not'
-                + ' simple primitives, null, Array, Date or File|FileList, or an object'
-                + ' with those types as values:',
-                errorKeys,
-                errorValues,
-            );
-        }
-
-        throw new Error('`initialValues` must be an object with strings, '
-            + 'numbers, booleans, null, Date, File, Array or FileList, or an object'
-            + ` with those types as values. Check the keys: ${errorKeys.map((key) => `"${key}"`).join(', ')}.`);
-    }
 
     const [data, setData] = React.useState(initialValues || {});
     const [errors, setErrors] = React.useState<FormError[]>([]);
@@ -285,6 +252,39 @@ export default (options: UseFormOptions = {}, dependencies = []): UseFormTools =
         ],
     );
 
+        // check if every value in `initialValues` is a simple primitive,
+    // null, `Array`, `Date` or `File`|`FileList`
+    const isInitialValuesValid = Object.values(initialValues)
+        .every(checkIfValueIsValid);
+
+    if (!isInitialValuesValid) {
+        // find error keys and values
+        const errorKeys = Object.entries(initialValues)
+            // eslint-disable-next-line no-unused-vars
+            .filter(([_, value]) => !checkIfValueIsValid(value))
+            .map(([key]) => key);
+        const errorValues = Object.entries(initialValues)
+            // eslint-disable-next-line no-unused-vars
+            .filter(([_, value]) => !checkIfValueIsValid(value))
+            // eslint-disable-next-line no-unused-vars
+            .map(([_, value]) => value);
+
+        if (debug) {
+            // eslint-disable-next-line no-console
+            console.debug(
+                '[useForm] The following values are not'
+                + ' simple primitives, null, Array, Date or File|FileList, or an object'
+                + ' with those types as values:',
+                errorKeys,
+                errorValues,
+            );
+        }
+
+        throw new Error('`initialValues` must be an object with strings, '
+            + 'numbers, booleans, null, Date, File, Array or FileList, or an object'
+            + ` with those types as values. Check the keys: ${errorKeys.map((key) => `"${key}"`).join(', ')}.`);
+    }
+
     return {
         state: [
             data,
@@ -300,3 +300,4 @@ export default (options: UseFormOptions = {}, dependencies = []): UseFormTools =
     };
 };
 
+export default useForm;

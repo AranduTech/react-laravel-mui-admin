@@ -1,16 +1,17 @@
 {
     "compilerOptions": {
         "lib": [
-            "DOM",
-            "ES2022",
-            "Webworker.Iterable"
+            "dom",
+            "esnext"
         ],
+        "importHelpers": true,
         "allowSyntheticDefaultImports": true,
         "target": "es6",
-        "module": "commonjs",
+        "module": "esnext",
         "moduleResolution": "node",
         "declaration": true,
         "outDir": "./lib",
+        "rootDir": "./src",
         "strict": true,
         "esModuleInterop": true,
         "jsx": "react-jsx",

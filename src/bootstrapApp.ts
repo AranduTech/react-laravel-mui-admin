@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-/* eslint-disable i18next/no-literal-string */
 // import _ from 'lodash';
 import axios from 'axios';
 

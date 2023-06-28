@@ -6,6 +6,8 @@ import error from './error';
  * Limpa os erros de navegação ao sair do componente,
  * quando utilizando navegação por SPA.
  */
-export default () => {
+const useClearErrorsOnExit = () => {
     React.useEffect(() => () => error.clear(), []);
 };
+
+export default useClearErrorsOnExit;

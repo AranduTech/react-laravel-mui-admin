@@ -19,7 +19,7 @@ import doAction from './doAction';
  * @param priority - Prioridade da ação. Quanto menor o número, maior a prioridade.
  * @return - Função que dispara a ação.
  */
-export default (action: string, callback: MacroActionCallback, priority = 10) => {
+const useAddAction = (action: string, callback: MacroActionCallback, priority = 10) => {
     React.useEffect(() => {
         addAction(action, callback, priority);
         return () => {
@@ -29,3 +29,5 @@ export default (action: string, callback: MacroActionCallback, priority = 10) =>
 
     return (...args: any[]) => doAction(action, ...args);
 };
+
+export default useAddAction;

@@ -1,3 +1,4 @@
+// const ChunksWebpackPlugin = require('chunks-webpack-plugin');
 var path = require('path');
 
 module.exports = {
@@ -17,23 +18,43 @@ module.exports = {
     'components/Form/ModelForm': './src/components/Form/ModelForm',
     'components/Form/Form': './src/components/Form/Form',
     'components/Form/FormField': './src/components/Form/FormField',
-    'components/RepositoryIndex': './src/components/RepositoryIndex',
-    'components/ToastProvider': './src/components/ToastProvider',
+    'components/RepositoryIndex/index': './src/components/RepositoryIndex',
+    'components/ToastProvider/index': './src/components/ToastProvider',
   },
   output: {
     path: path.resolve('lib'),
     filename: '[name].js',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
+    clean: true,
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
+  optimization: {
+    minimize: false,
+  },
   module: {
     rules: [
+        // {
+        //     test: /\.ts?/,
+        //     use: 'ts-loader',
+        //     exclude: /node_modules/,
+        // },
         {
-            test: /\.tsx|.ts?/,
-            use: 'ts-loader',
-            exclude: /node_modules/,
+          test: /\.tsx|.ts?$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  '@babel/preset-env',
+                  '@babel/preset-react',
+                  '@babel/preset-typescript',
+                ],
+              },
+            },
+          ],
         },
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
         // {
@@ -42,18 +63,37 @@ module.exports = {
         // }
     ]
   },
-  externals: {
-    '@emotion/react': '@emotion/react',
-    '@emotion/styled': '@emotion/styled',
-    '@mui/material': '@mui/material',
-    axios: 'axios',
-    i18next: 'i18next',
-    'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
-    lodash: 'lodash',
-    react: 'react',
-    'react-dom': 'react-dom',
-    'react-i18next': 'react-i18next',
-    'react-router-dom': 'react-router-dom',
-    uuid: 'uuid'
-  }
+  externals:[ 
+    {
+      axios: 'axios',
+      i18next: 'i18next',
+      'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
+      lodash: 'lodash',
+      react: 'react',
+      'react-dom': 'react-dom',
+      'react-i18next': 'react-i18next',
+      'react-router-dom': 'react-router-dom',
+      'react-jsx-runtime': 'react-jsx-runtime',
+      uuid: 'uuid'
+    },
+    /@mui\/.*/,
+    /@emotion\/react\/.*/,
+    /@emotion\/styled\/.*/,
+
+
+
+
+  ],
+  // plugins: [new ChunksWebpackPlugin()],
 };
+
+// /** Callbacks with global UMD-name of material-ui imports */
+// function externalMaterialUI (_, module, callback) {
+//   var isMaterialUIComponent = /^@mui\/material\/([^/]+)$/;
+//   var match = isMaterialUIComponent.exec(module);
+//   if (match !== null) {
+//       var component = match[1];
+//       return callback(null, `window["mui"].${component}`);
+//   }
+//   callback();
+// }
