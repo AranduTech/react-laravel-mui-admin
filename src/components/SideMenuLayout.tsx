@@ -123,7 +123,7 @@ const SideMenuLayout = ({ navMenuItems, bottomMenuItems, children }: SideMenuLay
     const { name: userName } = React.useMemo(() => blade('user'), []);
     const blockUi = React.useMemo(() => blade('block-ui') === '1', []);
 
-    const isTablet = useMediaQuery<Theme>((theme) => theme.breakpoints.up('md'));
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
     const handleDrawerOpen = () => {
         setOpen(true);

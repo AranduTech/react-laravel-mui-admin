@@ -2,11 +2,6 @@
 // import _ from 'lodash';
 import axios from 'axios';
 
-// import './globals/blade';
-// import './globals/error';
-// import './globals/route';
-// import './services/ModelRepository';
-
 import { AppConfiguration } from './types/config';
 
 import setupLang from './internals/setupLang';
