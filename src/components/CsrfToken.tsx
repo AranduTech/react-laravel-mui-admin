@@ -1,14 +1,12 @@
 import React from 'react';
 
-import blade from '../blade';
-
-const CSRF_TOKEN = blade('csrf');
+const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
 const CsrfToken = () => (
     <input
         type="hidden"
         name="_token"
-        value={CSRF_TOKEN}
+        value={CSRF_TOKEN || ''}
     />
 );
 
