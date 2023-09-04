@@ -18,7 +18,7 @@ export default (config: AppConfiguration) => {
      */
     axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-    // window.axios.defaults.withCredentials = true;
+    axios.defaults.withCredentials = true;
 
     /**
      * Echo exposes an expressive API for subscribing to channels and listening

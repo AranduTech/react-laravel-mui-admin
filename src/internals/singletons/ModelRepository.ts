@@ -68,7 +68,7 @@ export class ModelRepository {
 
                     if (typeof render === 'object' && 'element' in render) {
                         routes.push({
-                            path: route(`${className}.${action}`),
+                            path: route(`admin.${className}.${action}`),
                             loader: render.loader || defaultLoader,
                             element: render.element,
                         });
@@ -76,7 +76,7 @@ export class ModelRepository {
                     }
 
                     routes.push({
-                        path: route(`${className}.${action}`),
+                        path: route(`admin.${className}.${action}`),
                         loader: defaultLoader,
                         element: render as ReactNode,
                     });
@@ -91,7 +91,7 @@ export class ModelRepository {
 
                     if (typeof render === 'object' && 'element' in render) {
                         routes.push({
-                            path: route(`${className}.${action}`),
+                            path: route(`admin.${className}.${action}`),
                             loader: render.loader || defaultLoader,
                             element: render.element,
                         });
@@ -99,7 +99,7 @@ export class ModelRepository {
                     }
 
                     routes.push({
-                        path: route(`${className}.${action}`),
+                        path: route(`admin.${className}.${action}`),
                         loader: defaultLoader,
                         element: every(action, className) as ReactNode,
                     });
