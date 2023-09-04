@@ -23,7 +23,7 @@ const AsyncModelForm = ({
 
     React.useEffect(() => {
         if (id) {
-            axios(route(`${Model.getSchemaName()}.item`, { id })).then((response) => {
+            axios(route(`admin.${Model.getSchemaName()}.item`, { id })).then((response) => {
                 setItem(new Model(response.data));
             });
         } else {

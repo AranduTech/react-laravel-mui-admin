@@ -264,7 +264,7 @@ export class BaseModel {
             silent = false,
         } = options;
 
-        const url = route(`${this.className}.${this.id === 0 ? 'create' : 'update'}`, this.id === 0
+        const url = route(`admin.${this.className}.${this.id === 0 ? 'create' : 'update'}`, this.id === 0
             ? false
             : { id: this.id });
 
@@ -326,7 +326,7 @@ export class BaseModel {
      * @return {Promise<boolean>} - Promise com o resultado da requisição.
      */
     delete() {
-        const url = route(`${this.className}.delete`, { id: this.id });
+        const url = route(`admin.${this.className}.delete`, { id: this.id });
 
         return new Promise((resolve) => {
             if (!url) {
@@ -357,7 +357,7 @@ export class BaseModel {
      * @return {Promise<boolean>} - Promise com o resultado da requisição.
      */
     forceDelete() {
-        const url = route(`${this.className}.forceDelete`, { id: this.id });
+        const url = route(`admin.${this.className}.forceDelete`, { id: this.id });
 
         return new Promise((resolve) => {
             if (!url) {
@@ -394,7 +394,7 @@ export class BaseModel {
             throw new Error('O modelo não foi apagado.');
         }
 
-        const url = route(`${this.className}.restore`, { id: this.id });
+        const url = route(`admin.${this.className}.restore`, { id: this.id });
         return new Promise((resolve) => {
 
             if (!url) {

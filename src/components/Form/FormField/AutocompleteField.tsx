@@ -49,7 +49,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         if (typeof list !== 'undefined') {
             setLoading(true);
             if (typeof list === 'string' && route.exists(`${list}.list`)) {
-                axios(`${route(`${list}.list`)}?q=${inputText}&per_page=30`)
+                axios(`${route(`admin.${list}.list`)}?q=${inputText}&per_page=30`)
                     .then(handleRequestResponse)
                     .finally(() => setLoading(false));
                 return;
