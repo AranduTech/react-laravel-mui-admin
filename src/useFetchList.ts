@@ -32,7 +32,7 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
             params.set(key, searchParams.get(key) as string);
         });
 
-        return `${route(`${Model.getSchemaName()}.list`)}?${params.toString()}`;
+        return `${route(`admin.${Model.getSchemaName()}.list`)}?${params.toString()}`;
     }, [searchParams, Model, ignoreSearchParams]);
 
     const {
