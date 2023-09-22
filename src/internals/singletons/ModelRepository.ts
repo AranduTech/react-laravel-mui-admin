@@ -250,11 +250,7 @@ export class ModelRepository {
         const Model = this.getModelClass(className);
         const { fields: { [schema]: schemaFields } } = this.getClassSchema(className);
 
-        console.log('will create initialValues', schemaFields);
-
         const initialValues: ModelConstructorAttributes = createClassInitialValues(schemaFields);
-
-        console.log('got initial values', initialValues);
 
         return new Model(initialValues);
     }

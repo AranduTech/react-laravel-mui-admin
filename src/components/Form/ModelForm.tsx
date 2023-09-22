@@ -89,7 +89,7 @@ const ModelForm = ({
         <Form
             form={form}
             fields={fields.map(addMetaPropsToField(item, schema))}
-            alert={item.deletedAt ? undefined : 'This item is deleted.'}
+            alert={item.deletedAt ? t('table.cantEditTrashed') as string : undefined}
             showSubmitButton={item.deletedAt === null}
             {...props}
         />
