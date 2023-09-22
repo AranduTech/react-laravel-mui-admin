@@ -62,8 +62,8 @@ const ModelForm = ({
     // );
 
     const routeParams: [string, RouteReplacer | undefined] = item.id
-        ? [`${item.className}.update`, { id: item.id }]
-        : [`${item.className}.create`, undefined];
+        ? [`admin.${item.className}.update`, { id: item.id }]
+        : [`admin.${item.className}.create`, undefined];
 
     const form = useForm({
         initialValues: item.json(),
