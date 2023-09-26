@@ -67,15 +67,17 @@ export class BaseModel {
             Object.entries(relations).forEach(([key, relation]) => {
                 const { type, model } = relation;
 
-                const Model = this.modelRepository.getModelClass(model);
+                const Model = ['MorphTo', 'MorphToMany'].includes(type)
+                    ? this.modelRepository.getModelClassFromOriginalClassName(attributes[`${key}_type`] as string)
+                    : this.modelRepository.getModelClass(model);
 
                 const relationData = attributes[key];
 
-                if (['BelongsTo', 'MorphOne'].includes(type) && typeof relationData === 'object' && relationData !== null) {
+                if (['BelongsTo', 'MorphOne', 'MorphTo'].includes(type) && typeof relationData === 'object' && relationData !== null) {
                     newRelations[key] = new Model(relationData as ModelConstructorAttributes);
                 }
 
-                if (['HasMany', 'BelongsToMany', 'MorphMany'].includes(type) && Array.isArray(attributes[key])) {
+                if (['HasMany', 'BelongsToMany', 'MorphMany', 'MorphToMany'].includes(type) && Array.isArray(attributes[key])) {
                     newRelations[key] = (attributes[key] as object[]).map((item) => new Model(item as ModelConstructorAttributes));
                 }
             });
@@ -213,10 +215,10 @@ export class BaseModel {
 
         const relations: any = Object.entries(this.relations).reduce((acc: any, [key, value]) => {
             const { type } = modelRelations[key];
-            if (['BelongsTo', 'MorphOne'].includes(type) && value instanceof BaseModel) {
+            if (['BelongsTo', 'MorphOne', 'MorphTo'].includes(type) && value instanceof BaseModel) {
                 acc[key] = value.json();
             }
-            if (['HasMany', 'BelongsToMany', 'MorphMany'].includes(type) && Array.isArray(value)) {
+            if (['HasMany', 'BelongsToMany', 'MorphMany', 'MorphToMany'].includes(type) && Array.isArray(value)) {
                 acc[key] = value.map((item) => item.json());
             }
             return acc;

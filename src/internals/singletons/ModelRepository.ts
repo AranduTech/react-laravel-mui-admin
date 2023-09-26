@@ -221,6 +221,25 @@ export class ModelRepository {
     }
 
     /**
+     * Obtém a classe de um modelo a partir do nome original da classe
+     * 
+     * @param {string} className - Nome da classe original. Ex: 'App\Models\User'.
+     * @return {ModelProxy} - Classe do modelo.
+     * @throws {Error} - Caso a classe não exista.
+     */
+    getModelClassFromOriginalClassName(className: string) {
+        const classes = Object.keys(this.#schema).map((className) => ({
+            ...this.#schema[className], 
+            _class: className
+        }));
+        const modelClass = classes.find((modelClass) => modelClass['class'] === className);
+        if (!modelClass) {
+            throw new Error(`Model class '${className}' not found.`);
+        }
+        return this.getModelClass(modelClass._class);
+    }
+
+    /**
      * Obtém as classes de modelo.
      *
      * @return {object} - Objeto com as classes de modelo.
