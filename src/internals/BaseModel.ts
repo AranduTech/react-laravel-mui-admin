@@ -71,11 +71,11 @@ export class BaseModel {
 
                 const relationData = attributes[key];
 
-                if (type === 'BelongsTo' && typeof relationData === 'object' && relationData !== null) {
+                if (['BelongsTo', 'MorphOne'].includes(type) && typeof relationData === 'object' && relationData !== null) {
                     newRelations[key] = new Model(relationData as ModelConstructorAttributes);
                 }
 
-                if (['HasMany', 'BelongsToMany'].includes(type) && Array.isArray(attributes[key])) {
+                if (['HasMany', 'BelongsToMany', 'MorphMany'].includes(type) && Array.isArray(attributes[key])) {
                     newRelations[key] = (attributes[key] as object[]).map((item) => new Model(item as ModelConstructorAttributes));
                 }
             });
@@ -213,10 +213,10 @@ export class BaseModel {
 
         const relations: any = Object.entries(this.relations).reduce((acc: any, [key, value]) => {
             const { type } = modelRelations[key];
-            if (type === 'BelongsTo' && value instanceof BaseModel) {
+            if (['BelongsTo', 'MorphOne'].includes(type) && value instanceof BaseModel) {
                 acc[key] = value.json();
             }
-            if (['HasMany', 'BelongsToMany'].includes(type) && Array.isArray(value)) {
+            if (['HasMany', 'BelongsToMany', 'MorphMany'].includes(type) && Array.isArray(value)) {
                 acc[key] = value.map((item) => item.json());
             }
             return acc;
