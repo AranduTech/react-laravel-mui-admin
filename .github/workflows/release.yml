@@ -1,0 +1,41 @@
+name: Publish to NPM
+on:
+  push:
+    branches:
+      - master
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Setup Node
+          uses: actions/setup-node@v1
+          with:
+            node-version: 19
+            registry-url: https://registry.npmjs.org/
+ 
+        - uses: paulhatch/semantic-version@v4.0.2
+          id: semver
+
+        - name: Build & Tag
+          env:
+            VERSION: ${{ steps.semver.outputs.version }}
+          run: |
+            npm install
+            npm run build
+            npm version "${VERSION}"
+            git tag v"${VERSION}"
+            git push origin --tags
+        
+        - name: Publish to NPM
+          uses: JS-DevTools/npm-publish@v2
+          with:
+            token: ${{ secrets.NPM_TOKEN }}
+    
+        - name: Publish Github Release
+          uses: softprops/action-gh-release@v1
+          with:
+            tag_name: v${{ steps.semver.outputs.version }}
+            draft: false
