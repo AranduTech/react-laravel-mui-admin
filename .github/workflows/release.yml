@@ -27,8 +27,6 @@ jobs:
           run: |
             npm install
             npm run build
-            git tag v"${VERSION}"
-            git push origin --tags
             npm version "${VERSION}" --no-git-tag-version
 
         - name: Publish to NPM
@@ -38,8 +36,6 @@ jobs:
 
         - name: Publish Github Release
           uses: softprops/action-gh-release@v1
-          env:
-            VERSION: ${{ steps.semver.outputs.version }}
           with:
-            tag_name: "v${VERSION}"
+            tag_name: v${{ steps.semver.outputs.version }}
             draft: false
