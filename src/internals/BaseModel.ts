@@ -67,17 +67,24 @@ export class BaseModel {
             Object.entries(relations).forEach(([key, relation]) => {
                 const { type, model } = relation;
 
-                const Model = ['MorphTo', 'MorphToMany'].includes(type)
-                    ? this.modelRepository.getModelClassFromOriginalClassName(attributes[`${key}_type`] as string)
-                    : this.modelRepository.getModelClass(model);
+                if (type === 'MorphTo' && !attributes[`${key}_type`]) {
+                    return;
+                }
+
+                const Model = this.modelRepository.getModelClass(
+                    type === 'MorphTo'
+                        ? attributes[`${key}_type`] as string
+                        : model
+                );
 
                 const relationData = attributes[key];
-
-                if (['BelongsTo', 'MorphOne', 'MorphTo'].includes(type) && typeof relationData === 'object' && relationData !== null) {
+                const isSingle = ['BelongsTo', 'MorphOne', 'MorphTo'].includes(type);
+                
+                if (isSingle && typeof relationData === 'object' && relationData !== null) {
                     newRelations[key] = new Model(relationData as ModelConstructorAttributes);
                 }
 
-                if (['HasMany', 'BelongsToMany', 'MorphMany', 'MorphToMany'].includes(type) && Array.isArray(attributes[key])) {
+                if (!isSingle && Array.isArray(attributes[key])) {
                     newRelations[key] = (attributes[key] as object[]).map((item) => new Model(item as ModelConstructorAttributes));
                 }
             });

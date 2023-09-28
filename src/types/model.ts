@@ -76,7 +76,7 @@ export interface ModelSchemaAttributes {
     relations: {
         [relationName: string]: {
             model: string,
-            type: 'HasOne' | 'HasMany' | 'BelongsTo' | 'BelongsToMany' | 'MorphOne' | 'MorphMany' | 'MorphTo' | 'MorphToMany',
+            type: 'HasOne' | 'HasMany' | 'BelongsTo' | 'BelongsToMany' | 'MorphOne' | 'MorphMany' | 'MorphTo' | 'MorphToMany' | 'MorphedByMany',
         }
     },
     tables: {
