@@ -17,26 +17,29 @@ jobs:
           with:
             node-version: 19
             registry-url: https://registry.npmjs.org/
- 
+
         - uses: paulhatch/semantic-version@v5.2.1
           id: semver
 
         - name: Build & Tag
           env:
-            VERSION_TYPE: ${{ steps.semver.outputs.version_type }}
+            VERSION: ${{ steps.semver.outputs.version }}
           run: |
             npm install
             npm run build
-            npm version "${VERSION_TYPE}" -m "Bump version to %s"
+            git tag v"${VERSION}"
             git push origin --tags
-        
+            npm version "${VERSION}" --no-git-tag-version
+
         - name: Publish to NPM
           uses: JS-DevTools/npm-publish@v2
           with:
             token: ${{ secrets.NPM_TOKEN }}
-    
+
         - name: Publish Github Release
           uses: softprops/action-gh-release@v1
+          env:
+            VERSION: ${{ steps.semver.outputs.version }}
           with:
-            tag_name: v${{ steps.semver.outputs.version }}
+            tag_name: "v${VERSION}"
             draft: false
