@@ -21,6 +21,8 @@ export class ModelRepository {
     #models: { [className: string]: typeof Model } = {};
 
     createWebRoutes(registrationMixins: RouteRegistrationMixins = {}) {
+        this.#maybeCreateSchema();
+
         if (!this.#schema) {
             return [];
         }
@@ -87,13 +89,7 @@ export class ModelRepository {
     }
 
     getClassSchema = (className: string) => {
-        if (!this.#schema) {
-            this.#schema = app.getDefinition('models');
-
-            if (this.#schema) {
-                this.#makeClasses();
-            }
-        }
+       this.#maybeCreateSchema();
 
         if (!this.#schema || !this.#schema[className]) {
             throw new Error(`Schema for class '${className}' not found.`);
@@ -102,6 +98,16 @@ export class ModelRepository {
         const { [className]: schema } = this.#schema;
 
         return schema;
+    };
+
+    #maybeCreateSchema = () => {
+        if (!this.#schema) {
+            this.#schema = app.getDefinition('models');
+
+            if (this.#schema) {
+                this.#makeClasses();
+            }
+        }
     };
 
     /**
@@ -214,6 +220,7 @@ export class ModelRepository {
      * @throws {Error} - Caso a classe não exista.
      */
     getModelClassFromOriginalClassName(className: string) {
+        this.#maybeCreateSchema();
         if (!this.#schema) {
             throw new Error('Schema not found.');
         }
