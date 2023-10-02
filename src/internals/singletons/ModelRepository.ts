@@ -158,7 +158,7 @@ export class ModelRepository {
                             }
                             return target[prop];
                         }
-                        if (target.fillable.includes(prop)) {
+                        if (Object.keys(target.attributes).includes(prop)) {
                             return target.attributes[prop];
                         }
                         if (Object.keys(target.relations).includes(prop)) {
