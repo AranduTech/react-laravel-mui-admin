@@ -14,28 +14,11 @@ import app from '../../app';
  */
 export class ModelRepository {
 
-    #schema: ModelSchema;
+    #schema: ModelSchema | undefined;
 
     #baseModels: { [className: string]: typeof Model } = {};
 
     #models: { [className: string]: typeof Model } = {};
-
-    // #importMapping = {
-    //     index: '../views/Repository/RepositoryIndex',
-    //     // create: 'RepositoryItem',
-    //     // item: 'RepositoryItem',
-    // };
-
-    /**
-     * Cria uma nova instância de ModelRepository.
-     */
-    constructor() {
-        this.#schema = app.getDefinition('models');
-
-        if (this.#schema) {
-            this.#makeClasses();
-        }
-    }
 
     createWebRoutes(registrationMixins: RouteRegistrationMixins = {}) {
         if (!this.#schema) {
@@ -104,10 +87,20 @@ export class ModelRepository {
     }
 
     getClassSchema = (className: string) => {
-        if (!this.#schema[className]) {
+        if (!this.#schema) {
+            this.#schema = app.getDefinition('models');
+
+            if (this.#schema) {
+                this.#makeClasses();
+            }
+        }
+
+        if (!this.#schema || !this.#schema[className]) {
             throw new Error(`Schema for class '${className}' not found.`);
         }
+
         const { [className]: schema } = this.#schema;
+
         return schema;
     };
 
@@ -215,14 +208,14 @@ export class ModelRepository {
 
     /**
      * Obtém a classe de um modelo a partir do nome original da classe
-     * 
+     *
      * @param {string} className - Nome da classe original. Ex: 'App\Models\User'.
      * @return {ModelProxy} - Classe do modelo.
      * @throws {Error} - Caso a classe não exista.
      */
     getModelClassFromOriginalClassName(className: string) {
         const classes = Object.keys(this.#schema).map((className) => ({
-            ...this.#schema[className], 
+            ...this.#schema[className],
             _class: className
         }));
         const modelClass = classes.find((modelClass) => modelClass['class'] === className);
