@@ -30,7 +30,7 @@ export class ModelRepository {
         const { ['*']: every, ...mixins } = registrationMixins;
 
         Object.keys(this.#schema).forEach((className) => {
-            const { web } = this.#schema[className];
+            const { web } = (this.#schema as ModelSchema)[className];
 
             web.forEach((action) => {
                 const defaultLoader = () => ({ className, action });
@@ -174,7 +174,7 @@ export class ModelRepository {
      * @return {void}
      */
     #makeClasses() {
-        Object.keys(this.#schema).forEach((className) => {
+        Object.keys(this.#schema as ModelSchema).forEach((className) => {
             this.#models[className] = this.#makeModelClass(className);
         });
     }
@@ -214,8 +214,12 @@ export class ModelRepository {
      * @throws {Error} - Caso a classe não exista.
      */
     getModelClassFromOriginalClassName(className: string) {
+        if (!this.#schema) {
+            throw new Error('Schema not found.');
+        }
+
         const classes = Object.keys(this.#schema).map((className) => ({
-            ...this.#schema[className],
+            ...(this.#schema as ModelSchema)[className],
             _class: className
         }));
         const modelClass = classes.find((modelClass) => modelClass['class'] === className);
