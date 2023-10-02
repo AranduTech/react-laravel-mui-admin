@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# This script creates symlinks for the external dependencies of the library
+# in the node_modules directory of the consumer project.
+# You can use this command to develop the library using a local laravel project
+# as a consumer. This way you can test the library in the context of the consumer
+# project without having to publish it to npm.
+
+# Usage: ./link_external_deps.sh <path_to_consumer_project>
+# Example: ./link_external_deps.sh /var/www/html/my-laravel-project
+
+# To actually link the projects, you need to run this command in the library directory
+# (where this script is located)
+# npm link
+# Then, in the consumer project directory, run
+# npm link @arandu/laravel-mui-admin
+
 # Specify your dependencies
 declare -a dependencies=("axios"
                          "i18next"

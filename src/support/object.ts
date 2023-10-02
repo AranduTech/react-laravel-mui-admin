@@ -1,8 +1,15 @@
 // import _ from 'lodash';
 import { diff } from 'deep-object-diff';
 
-export const filterObjectByKeys = (keys: Array<string>, obj: any) => Object.keys(obj)
+export const createObjectWithKeys = (keys: Array<string>, obj: any) => Object.keys(obj)
     .filter((key) => keys.includes(key))
+    .reduce((acc: any, key) => {
+        acc[key] = obj[key];
+        return acc;
+    }, {});
+
+export const createObjectWithoutKeys = (keys: Array<string>, obj: any) => Object.keys(obj)
+    .filter((key) => !keys.includes(key))
     .reduce((acc: any, key) => {
         acc[key] = obj[key];
         return acc;

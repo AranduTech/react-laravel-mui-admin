@@ -22,12 +22,10 @@ jobs:
           id: semver
 
         - name: Build & Tag
-          env:
-            VERSION: ${{ steps.semver.outputs.version }}
           run: |
             npm install
             npm run build
-            npm version "${VERSION}" --no-git-tag-version
+            npm version ${{ steps.semver.outputs.version }} --no-git-tag-version
 
         - name: Publish to NPM
           uses: JS-DevTools/npm-publish@v2

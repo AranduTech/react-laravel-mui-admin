@@ -1,5 +1,5 @@
 import React from 'react';
-import { filterObjectByKeys, objectDiff } from '../support/object';
+import { createObjectWithKeys, createObjectWithoutKeys, objectDiff } from '../support/object';
 // import toast from '../services/toast';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
@@ -46,7 +46,8 @@ export class BaseModel {
 
         const { fillable, relations } = this.modelRepository.getClassSchema(this.className);
 
-        const newAttributes = filterObjectByKeys(fillable, attributes);
+        const excludedKeys = ['id', 'created_at', 'updated_at', 'deleted_at', ...Object.keys(relations)];
+        const newAttributes = createObjectWithoutKeys(excludedKeys, attributes);
 
         const {
             id = 0, created_at: createdAt, updated_at: updatedAt,
@@ -206,7 +207,7 @@ export class BaseModel {
      */
     fill(attributes: object) {
         // console.log('fill started');
-        const validAttributes = filterObjectByKeys(this.fillable, attributes);
+        const validAttributes = createObjectWithKeys(this.fillable, attributes);
         Object.keys(validAttributes).forEach((key) => {
             this.setAttribute(key, validAttributes[key]);
         });
@@ -290,7 +291,7 @@ export class BaseModel {
                 data: {
                     ...sendsOnlyModifiedFields
                         ? this.diff()
-                        : this.attributes,
+                        : createObjectWithKeys(this.fillable, this.attributes),
                     ...additionalPayload,
                 },
             })
