@@ -5,7 +5,7 @@ import React from 'react';
 import modelRepository from './ModelRepository';
 import { Model } from '../../types/model';
 
-import blade from '../../blade';
+import app from '../../app';
 
 /**
  * Classe para gerenciar a autenticação do usuário.
@@ -30,7 +30,7 @@ class Auth {
     getCurrentUser(): Model {
         if (!this.#user) {
             const Model = modelRepository.getModelClass('user');
-            const userData = blade('user');
+            const userData = app.getDefinition('data.user');
             this.#user = new Model(userData);
         }
         return this.#user;

@@ -20,8 +20,8 @@ import { useTranslation } from 'react-i18next';
 
 import RecursiveList from './RecursiveList';
 import { MenuItem } from '../types/menu';
-import blade from '../blade';
 import route from '../route';
+import app from '../app';
 
 const drawerWidth = 280;
 
@@ -120,8 +120,8 @@ const SideMenuLayout = ({ navMenuItems, bottomMenuItems, children }: SideMenuLay
 
     const { t } = useTranslation();
 
-    const { name: userName } = React.useMemo(() => blade('user'), []);
-    const blockUi = React.useMemo(() => blade('block-ui') === '1', []);
+    const { name: userName } = React.useMemo(() => app.getDefinition('data.user'), []);
+    const blockUi = React.useMemo(() => app.getDefinition('data.block-ui') === '1', []);
 
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 

@@ -1,5 +1,6 @@
 import addAction from './addAction';
 import addFilter from './addFilter';
+import app from './app';
 import applyFilters from './applyFilters';
 import auth from './auth';
 import blade from './blade';
@@ -26,6 +27,7 @@ export {
     addAction,
     addFilter,
     applyFilters,
+    app,
     auth,
     blade,
     bootstrapApp,

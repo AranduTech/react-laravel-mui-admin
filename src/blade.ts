@@ -1,3 +1,8 @@
+/**
+ * @deprecated
+ * @param key 
+ * @returns 
+ */
 const blade = (key: string) => {
     const el = document.getElementById(`react-data-${key}`);
 

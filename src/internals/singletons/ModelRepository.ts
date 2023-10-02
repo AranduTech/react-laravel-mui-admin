@@ -1,20 +1,13 @@
 /* eslint-disable i18next/no-literal-string */
-// import React from 'react';
-// import Suspense from '../components/Suspense';
 import makeBaseModel from '../makeBaseModel';
 import { dotSetter } from '../../support/object';
-import blade from '../../blade';
 import route from '../../route';
 import { RouteRegistrationMixins } from '../../types/route';
 import { Model, ModelConstructorAttributes, ModelField, ModelSchema } from '../../types/model';
 import { RouteObject } from 'react-router-dom';
 import { ReactNode } from 'react';
-import { BaseModel } from '../BaseModel';
 
-/**
- * @typedef {object} RegistrationMixins
- * @property {Function} [className] - Função para lidar com ações para uma classe específica.
- */
+import app from '../../app';
 
 /**
  * Class ModelRepository.
@@ -37,7 +30,7 @@ export class ModelRepository {
      * Cria uma nova instância de ModelRepository.
      */
     constructor() {
-        this.#schema = blade('model-schema');
+        this.#schema = app.getDefinition('models');
 
         if (this.#schema) {
             this.#makeClasses();
