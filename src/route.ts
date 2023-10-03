@@ -39,6 +39,6 @@ const route = (name: string, replace: RouteReplacer = false) => {
     return `/${newPath}`;
 };
 
-route.exists = (name: string) => !!document.getElementById(`route-data-${name}`);
+route.exists = (name: string) => !!app.getDefinition('routes')[name];
 
 export default route;
