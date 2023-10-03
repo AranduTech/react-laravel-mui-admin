@@ -84,7 +84,15 @@ export const objectDiff = (original: any, modified: any) => {
 
 export const dotAccessor = (obj: any, path: string) => {
     try {
-        return path.split('.').reduce((acc, key) => acc[key], obj);
+        if (!obj) {
+            return undefined;
+        }
+        return path.split('.').reduce((acc, key) => {
+            if (!acc) {
+                return undefined;
+            }
+            return acc[key]
+        }, obj);
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
