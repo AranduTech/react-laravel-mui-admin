@@ -6,6 +6,7 @@ import AutocompleteField from './FormField/AutocompleteField';
 import LabelField from './FormField/LabelField';
 import SelectField from './FormField/SelectField';
 import { FormFieldProps } from '../../types/form';
+import useApplyFilters from '../../useApplyFilters';
 
 const fieldTypeMapping: { [key: string]: React.ElementType } = {
     select: SelectField,
@@ -17,8 +18,10 @@ const fieldTypeMapping: { [key: string]: React.ElementType } = {
 const FormField = ({ form, field, wrapper: WrapperComponent }: FormFieldProps & { wrapper: React.ElementType }) => {
     const { type = 'text', gridItem = { xs: 12 } } = field;
 
+    const filteredFieldTypeMapping = useApplyFilters('form_field_type_mapping', fieldTypeMapping);
+
     const FormField = React.useMemo(() => {
-        return fieldTypeMapping[type] || TextField;
+        return filteredFieldTypeMapping[type] || TextField;
     }, [type]);
 
     return (

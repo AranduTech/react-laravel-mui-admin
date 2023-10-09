@@ -48,7 +48,7 @@ export class BaseModel {
 
         const excludedKeys = [
             'id', 'created_at', 'updated_at', 'deleted_at', 'created_by',
-            'updated_by', ...Object.keys(relations)
+            'updated_by', ...Object.keys(relations || {})
         ];
 
         const newAttributes = createObjectWithoutKeys(excludedKeys, attributes);

@@ -60,8 +60,8 @@ const RepositoryIndex = () => {
 
     const {
         items, pagination,
-        refresh, setPage, setTab, setPerPage, setSearch,
-        query: { tab },
+        refresh, setPage, setTab, setPerPage, setSearch, setFilters, setOrderBy,
+        query: { tab, filters, order_by },
         request: { loading, searchParams, setSearchParams },
     } = useFetchList(Model, { ignoreSearchParams: ['id'] });
 
@@ -107,6 +107,30 @@ const RepositoryIndex = () => {
             className,
         );
     };
+
+    const handleSort = (field: string, direction?: 'asc' | 'desc') => {
+        if (!field) {
+            setSearchParams(() => {
+                const { searchParams } = new URL(document.location.toString());
+                searchParams.delete('order_by');
+                return searchParams;
+            });
+            return;
+        }
+        setOrderBy(`${field}:${direction}`);
+    };
+
+    const handleApplyFilters = (filters: any) => {
+        if (Object.keys(filters).length === 0) {
+            setSearchParams(() => {
+                const { searchParams } = new URL(document.location.toString());
+                searchParams.delete('filters');
+                return searchParams;
+            });
+            return;
+        }
+        setFilters(filters);
+    }
 
     const handleClickItem: ((event: React.MouseEvent<unknown, MouseEvent>, item: Model) => void) = (event, item) => {
         if (item.deletedAt) {
@@ -192,10 +216,15 @@ const RepositoryIndex = () => {
             </Grid>
             <PaginatedTable
                 items={items}
-                columns={defaultTable}
+                columns={defaultTable.columns}
+                filter={defaultTable.filter}
+                filtersApplied={JSON.parse(filters)}
                 massActions={modelMassActions}
+                orderBy={order_by}
+                onSort={handleSort}
                 onSearch={handleSearchSubmit}
                 onMassAction={handleMassActionSubmit}
+                onApplyFilters={handleApplyFilters}
                 onPageChange={(page) => setPage(`${page}`)}
                 onPerPageChange={(perPage) => setPerPage(`${perPage}`)}
                 onClickItem={handleClickItem}

@@ -19,6 +19,7 @@ const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'numb
     || (typeof value === 'object' && (
         // eslint-disable-next-line no-extra-parens
         (value instanceof Date || value instanceof File || value instanceof FileList)
+        || typeof value.toJSON === 'function'
         || Object.values(value).every(checkIfValueIsValid))
     );
 

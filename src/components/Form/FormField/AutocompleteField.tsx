@@ -16,13 +16,13 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         label, name, labeledBy = 'name', options: initialOptions, list,
         cached = true, debounce = 1000, _meta: { model, schema } = {},
         // eslint-disable-next-line no-unused-vars
-        initialValue, gridItem, rows,
+        initialValue, gridItem, rows, multiple = false,
         ...props
     } = field;
 
     const { autocompleteProps: autocompletePropsFn } = form;
 
-    const autocompleteProps = React.useMemo(
+    const { value, ...autocompleteProps } = React.useMemo(
         () => autocompletePropsFn(name, { textFieldProps: { label: label || name } }),
         [autocompletePropsFn, label, name],
     );
@@ -49,7 +49,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         if (typeof list !== 'undefined') {
             setLoading(true);
             if (typeof list === 'string' && route.exists(`admin.${list}.list`)) {
-                axios(`${route(`admin.${list}.list`)}?q=${inputText}&per_page=30`)
+                axios(`${route(`admin.${list}.list`)}?q=${inputText}&per_page=30&reducedColumns`)
                     .then(handleRequestResponse)
                     .finally(() => setLoading(false));
                 return;
@@ -69,6 +69,10 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
             fullWidth
             {...props}
             {...autocompleteProps}
+            value={typeof value === 'undefined'
+                ? (multiple ? [] : null)
+                : value}
+            multiple={multiple}
             getOptionLabel={(option) => dotExists(option, labeledBy)
                 ? dotAccessor(option, labeledBy)
                 : JSON.stringify(option)}

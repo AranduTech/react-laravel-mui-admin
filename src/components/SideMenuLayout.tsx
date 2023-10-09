@@ -44,7 +44,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     [theme.breakpoints.up('sm')]: { width: `calc(${theme.spacing(10)} + 1px)` },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader: any = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -57,7 +57,7 @@ interface DrawerProps extends MuiDrawerProps {
     open?: boolean;
 }
 
-const DrawerFooter = styled(
+const DrawerFooter: any = styled(
     Box,
     { shouldForwardProp: (prop) => prop !== 'open' },
 )<DrawerProps>(({ theme, open }) => ({
@@ -133,11 +133,11 @@ const SideMenuLayout = ({ navMenuItems, bottomMenuItems, children }: SideMenuLay
         setOpen(false);
     };
 
-    const AppBarComponent = React.useMemo(() => isTablet
+    const AppBarComponent: any = React.useMemo(() => isTablet
         ? AppBar
         : MuiAppBar, [isTablet]);
 
-    const DrawerComponent = React.useMemo(() => isTablet
+    const DrawerComponent: any = React.useMemo(() => isTablet
         ? Drawer
         : MuiDrawer, [isTablet]);
 

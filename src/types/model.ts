@@ -66,6 +66,7 @@ export interface ModelField {
 export interface ModelTableColumnDefinition {
     key: string,
     label: string,
+    sortable?: boolean,
 }
 
 export interface ModelSchemaAttributes {
@@ -80,7 +81,10 @@ export interface ModelSchemaAttributes {
         }
     },
     tables: {
-        [tableName: string]: Array<ModelTableColumnDefinition>
+        [tableName: string]: {
+            columns: Array<ModelTableColumnDefinition>,
+            filter?: Array<ModelField>,
+        }
     },
     web: string[],
     softDelete?: boolean,

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 
 import FormField from './FormField';
 import { UseFormTools } from '../../types/form';
@@ -19,6 +19,7 @@ export interface BaseFormProps {
     alert?: string;
     alertSeverity?: 'error' | 'warning' | 'info' | 'success';
     as?: React.ElementType;
+    spacing?: Grid2Props['spacing'],
 }
 
 export interface FormProps extends BaseFormProps {

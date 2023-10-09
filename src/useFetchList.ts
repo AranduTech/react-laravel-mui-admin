@@ -44,6 +44,8 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         per_page: perPage = '15',
         q: search = '',
         tab = 'all',
+        filters = '{}',
+        order_by = '',
     } = React.useMemo(() => Object.fromEntries(searchParams.entries()), [searchParams]);
 
     const {
@@ -92,6 +94,22 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         }, { replace: true });
     }, [setSearchParams]);
 
+    const setFilters = React.useCallback((value: any) => {
+        setSearchParams(() => {
+            const { searchParams } = new URL(document.location.toString());
+            searchParams.set('filters', JSON.stringify(value));
+            return searchParams;
+        }, { replace: true });
+    }, [setSearchParams]);
+
+    const setOrderBy = React.useCallback((value: string) => {
+        setSearchParams(() => {
+            const { searchParams } = new URL(document.location.toString());
+            searchParams.set('order_by', value);
+            return searchParams;
+        }, { replace: true });
+    }, [setSearchParams]);
+
     return {
         items,
 
@@ -100,6 +118,8 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
             page,
             tab,
             search,
+            filters,
+            order_by,
         },
 
         pagination,
@@ -108,6 +128,8 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         setPerPage,
         setSearch,
         setTab,
+        setFilters,
+        setOrderBy,
 
         refresh,
 

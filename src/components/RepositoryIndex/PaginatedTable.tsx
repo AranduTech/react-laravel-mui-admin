@@ -2,6 +2,7 @@ import React, { ChangeEvent, MouseEvent } from 'react';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -21,6 +22,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
+import Popover from '@mui/material/Popover';
 
 import Icon from '../Icon';
 import PaginationRow from './PaginationRow';
@@ -29,18 +31,24 @@ import ItemRow from './ItemRow';
 import useForm from '../../useForm';
 
 import mediaQuery from './mediaQuery';
-import { Model, ModelTableColumnDefinition } from '../../types/model';
+import { Model, ModelField, ModelTableColumnDefinition } from '../../types/model';
 import { FormError, FormState } from '../../types/form';
 import { useTranslation } from 'react-i18next';
+import Form from '../Form/Form';
 
 
 export interface PaginatedTableProps {
     items: Model[];
+    filter?: Array<ModelField>,
+    filtersApplied?: any,
+    orderBy: string;
     massActions?: { label: string, name: string }[];
     columns?: ModelTableColumnDefinition[];
     onSearch: (data: FormState, setErrors?: (errors: FormError[]) => void) => void | Promise<void>;
     onMassAction?: (data: FormState, setErrors?: (errors: FormError[]) => void) => void | Promise<void>;
-    onClickItem?: (event: React.MouseEvent<unknown>, item: Model) => void
+    onClickItem?: (event: React.MouseEvent<unknown>, item: Model) => void;
+    onApplyFilters?: (data: FormState) => void;
+    onSort?: (field: string, direction?: 'asc' | 'desc') => void;
     pagination: {
         current_page?: number;
         per_page?: number;
@@ -54,14 +62,29 @@ export interface PaginatedTableProps {
 };
 
 const PaginatedTable = ({
-    items, massActions = [], columns = [], onSearch: handleSearchSubmit,
+    items, massActions = [], columns = [], onSearch: handleSearchSubmit, filter,
     onMassAction: handleMassActionSubmit, onClickItem = () => null, pagination,
     onPageChange: handlePageChange, onPerPageChange: handlePerPageChange,
+    onApplyFilters: handleApplyFilters = () => null, filtersApplied = {},
+    orderBy, onSort: handleSort = () => null,
     ...props
 }: PaginatedTableProps) => {
     const isFull = useMediaQuery(mediaQuery);
 
     const { t } = useTranslation();
+
+    const [filterButtonEl, setFilterButtonEl] = React.useState<HTMLButtonElement | null>(null);
+
+    const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setFilterButtonEl(event.currentTarget);
+    };
+
+    const handleFilterClose = () => {
+        setFilterButtonEl(null);
+    }
+
+    const filterOpen = Boolean(filterButtonEl);
+    const filterId = filterOpen ? 'filter-popover' : undefined;
 
     const {
         formProps: searchFormProps,
@@ -82,6 +105,29 @@ const PaginatedTable = ({
         },
         onSubmit: handleMassActionSubmit,
     });
+
+    const filterForm = useForm({
+        initialValues: filtersApplied,
+        preventStructureChange: false,
+        onSubmit: (data) => {
+            const payload = Object.keys(data).reduce((acc, key) => {
+                if (!data[key] || (Array.isArray(data[key]) && (data[key] as Array<any>).length === 0)) {
+                    return acc;
+                }
+                return {
+                    ...acc,
+                    [key]: data[key],
+                };
+            }, {});
+            handleApplyFilters(payload);
+            handleFilterClose();
+        },
+        debug: true,
+    });
+
+    const { 
+        state: [_filterFormData, setFilterFormState],
+    } = filterForm;
 
     // reseta a seleção quando listagem muda
     // reseta a ação em massa quando listagem muda
@@ -128,6 +174,23 @@ const PaginatedTable = ({
         });
     };
 
+    const handleClickHeaderCell = (column: ModelTableColumnDefinition) => () => {
+        if (column.sortable) {
+            if (column.key === sortColumn) {
+                if (sortDirection === 'asc') {
+                    handleSort(column.key, 'desc');
+                    return;
+                }
+                if (sortDirection === 'desc') {
+                    handleSort('');
+                }
+                return;
+            }
+
+            handleSort(column.key, 'asc');
+        }
+    };
+
     const isSelected = (id: number) => (selected as number[]).indexOf(id) !== -1;
 
     const dataColumns = isFull
@@ -141,6 +204,7 @@ const PaginatedTable = ({
     const checkIndeterminate = (selected as number[]).length > 0 && (selected as number[]).length < items.length;
     const checkSelected = items.length > 0 && (selected as number[]).length === items.length;
 
+    const [sortColumn = '', sortDirection = ''] = orderBy.split(':');
 
     return (
         <TableContainer component={Paper}>
@@ -154,35 +218,83 @@ const PaginatedTable = ({
                                 justifyContent="space-between"
                                 alignItems="stretch"
                             >
-                                <Stack
-                                    component="form"
-                                    direction="row"
-                                    spacing={2}
-                                    {...searchFormProps()}
-                                >
-                                    <TextField
-                                        fullWidth={!isFull}
-                                        type="search"
-                                        label={t('common.search')}
-                                        size="small"
-                                        InputProps={{
-                                            endAdornment: (
-                                                <IconButton
-                                                    size="small"
-                                                    type="submit"
-                                                >
-                                                    <Icon name="search" />
-                                                </IconButton>
-                                            ),
-                                        }}
-                                        {...searchInputProps('search', (e) => {
-                                            if (e.target.value === '') {
-                                                handleSearchSubmit({ search: '' }, () => null);
-                                            }
-                                            return e.target.value;
-                                        })}
-                                    />
+                                <Stack direction="row">
+                                    <Stack
+                                        component="form"
+                                        direction="row"
+                                        spacing={2}
+                                        {...searchFormProps()}
+                                    >
+                                        <TextField
+                                            fullWidth={!isFull}
+                                            type="search"
+                                            label={t('common.search')}
+                                            size="small"
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <IconButton
+                                                        size="small"
+                                                        type="submit"
+                                                    >
+                                                        <Icon name="search" />
+                                                    </IconButton>
+                                                ),
+                                            }}
+                                            {...searchInputProps('search', (e) => {
+                                                if (e.target.value === '') {
+                                                    handleSearchSubmit({ search: '' }, () => null);
+                                                }
+                                                return e.target.value;
+                                            })}
+                                        />
 
+                                    </Stack>
+                                    <Stack
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        {filter && (
+                                            <>
+                                                <IconButton
+                                                    aria-describedby={filterId}
+                                                    onClick={handleFilterClick}
+                                                >
+                                                    <Badge color="primary" badgeContent={Object.keys(filtersApplied).length}>
+                                                        <Icon name="filterList" />
+                                                    </Badge>
+                                                </IconButton>
+                                                <Popover
+                                                    id={filterId}
+                                                    open={filterOpen}
+                                                    anchorEl={filterButtonEl}
+                                                    onClose={() => {
+                                                        handleFilterClose();
+                                                        setFilterFormState(filtersApplied);
+                                                    }}
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'left',
+                                                    }}
+                                                >
+                                                    <Paper sx={{ p: 2, maxWidth: 'min(700px, 80vw)' }}>
+                                                        <Form
+                                                            fields={filter}
+                                                            form={filterForm}
+                                                            spacing={1}
+                                                            submitText="Filtrar"
+                                                            cancelText="Limpar"
+                                                            showCancelButton
+                                                            onCancel={() => {
+                                                                setFilterFormState({});
+                                                                handleApplyFilters({});
+                                                                handleFilterClose();
+                                                            }}
+                                                        />
+                                                    </Paper>
+                                                </Popover>
+                                            </>
+                                        )}
+                                    </Stack>
                                 </Stack>
                                 <Stack
                                     component="form"
@@ -191,6 +303,7 @@ const PaginatedTable = ({
                                     spacing={2}
                                     {...massActionFormProps()}
                                 >
+                                    
                                     <FormControl
                                         size="small"
                                         fullWidth={!isFull}
@@ -234,7 +347,7 @@ const PaginatedTable = ({
                                             indeterminate={checkIndeterminate}
                                             checked={checkSelected}
                                             onChange={handleSelectAllClick}
-                                            inputProps={{ 'aria-label': 'select all desserts' }}
+                                            inputProps={{ 'aria-label': 'select all' }}
                                         />
                                     }
                                     label={t('table.actions.selectAll')}
@@ -252,14 +365,23 @@ const PaginatedTable = ({
                                         indeterminate={checkIndeterminate}
                                         checked={checkSelected}
                                         onChange={handleSelectAllClick}
-                                        inputProps={{ 'aria-label': 'select all desserts' }}
+                                        inputProps={{ 'aria-label': 'select all' }}
                                     />
                                 </TableCell>
                             )}
                             {columns.map((column) => (
-                                <TableCell key={column.key}>
+                                <TableCell 
+                                    key={column.key} 
+                                    onClick={handleClickHeaderCell(column)}
+                                    sx={{ cursor: column.sortable ? 'pointer' : 'default' }}
+                                >
                                     <Typography variant="h6">
-                                        {column.label}
+                                        {column.label} 
+                                        <Typography component="span" variant="body2">
+                                            {column.key === sortColumn && (
+                                                <Icon name={sortDirection === 'asc' ? 'arrowUpward' : 'arrowDownward'} />
+                                            )}
+                                        </Typography>
                                     </Typography>
                                 </TableCell>
                             ))}
