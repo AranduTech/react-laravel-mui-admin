@@ -376,12 +376,7 @@ const PaginatedTable = ({
                                     sx={{ cursor: column.sortable ? 'pointer' : 'default' }}
                                 >
                                     <Typography variant="h6">
-                                        {column.label} 
-                                        <Typography component="span" variant="body2">
-                                            {column.key === sortColumn && (
-                                                <Icon name={sortDirection === 'asc' ? 'arrowUpward' : 'arrowDownward'} />
-                                            )}
-                                        </Typography>
+                                        {column.label}{column.key === sortColumn && (sortDirection === 'asc' ? ' ↑' : ' ↓')}
                                     </Typography>
                                 </TableCell>
                             ))}

@@ -7,11 +7,7 @@ import { AppConfiguration } from '../../types/config';
  */
 class Config {
 
-    private appConfiguration: AppConfiguration;
-
-    constructor() {
-        this.appConfiguration = {};
-    }
+    private appConfiguration?: AppConfiguration;
 
     /**
      * Registra a configuração do projeto.

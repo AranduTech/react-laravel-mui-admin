@@ -20,6 +20,7 @@ import useAddAction from './useAddAction';
 import useApiRequest from './useApiRequest';
 import useApplyFilters from './useApplyFilters';
 import useClearErrorsOnExit from './useClearErrorsOnExit';
+import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
 
@@ -46,6 +47,7 @@ export {
     useApiRequest,
     useApplyFilters,
     useClearErrorsOnExit,
+    useFetchItem,
     useFetchList,
     useForm,
 }

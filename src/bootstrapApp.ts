@@ -7,18 +7,19 @@ import { AppConfiguration } from './types/config';
 import setupLang from './internals/setupLang';
 import registerConfig from './internals/registerConfig';
 
+/** @deprecated */
 export default (config: AppConfiguration) => {
-    registerConfig(config);
-    setupLang();
+    // registerConfig(config);
+    // setupLang();
 
-    /**
-     * We'll load the axios HTTP library which allows us to easily issue requests
-     * to our Laravel back-end. This library automatically handles sending the
-     * CSRF token as a header based on the value of the "XSRF" token cookie.
-     */
-    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    // /**
+    //  * We'll load the axios HTTP library which allows us to easily issue requests
+    //  * to our Laravel back-end. This library automatically handles sending the
+    //  * CSRF token as a header based on the value of the "XSRF" token cookie.
+    //  */
+    // axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-    axios.defaults.withCredentials = true;
+    // axios.defaults.withCredentials = true;
 
     /**
      * Echo exposes an expressive API for subscribing to channels and listening

@@ -8,6 +8,7 @@ import { RouteObject } from 'react-router-dom';
 import { ReactNode } from 'react';
 
 import app from '../../app';
+import config from '../../config';
 
 /**
  * Class ModelRepository.
@@ -102,7 +103,7 @@ export class ModelRepository {
 
     #maybeCreateSchema = () => {
         if (!this.#schema) {
-            this.#schema = app.getDefinition('models');
+            this.#schema = config('boot.models');
 
             if (this.#schema) {
                 this.#makeClasses();

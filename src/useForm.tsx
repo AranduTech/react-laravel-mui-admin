@@ -86,7 +86,7 @@ const getAutocompleteProps = ({
  * @throws - Se `initialValues` não for um objeto com strings,
  * números, booleans, null, Date, File, Array ou FileList.
  */
-const useForm = (options: UseFormOptions = {}, dependencies = []): UseFormTools => {
+const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFormTools => {
     const {
         initialValues: initialValuesOption = {}, onSubmit: onSubmitFn = () => null,
         validate: validateFn = () => [], validateOnInputChange = false, preventDefault = true,

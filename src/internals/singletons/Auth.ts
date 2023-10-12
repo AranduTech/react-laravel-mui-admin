@@ -6,6 +6,7 @@ import modelRepository from './ModelRepository';
 import { Model } from '../../types/model';
 
 import app from '../../app';
+import config from '../../config';
 
 /**
  * Classe para gerenciar a autenticação do usuário.
@@ -30,7 +31,7 @@ class Auth {
     getCurrentUser(): Model {
         if (!this.#user) {
             const Model = modelRepository.getModelClass('user');
-            const userData = app.getDefinition('data.user');
+            const userData = config('boot.data.user');
             this.#user = new Model(userData);
         }
         return this.#user;

@@ -22,6 +22,7 @@ import RecursiveList from './RecursiveList';
 import { MenuItem } from '../types/menu';
 import route from '../route';
 import app from '../app';
+import config from '../config';
 
 const drawerWidth = 280;
 
@@ -120,8 +121,8 @@ const SideMenuLayout = ({ navMenuItems, bottomMenuItems, children }: SideMenuLay
 
     const { t } = useTranslation();
 
-    const { name: userName } = React.useMemo(() => app.getDefinition('data.user'), []);
-    const blockUi = React.useMemo(() => app.getDefinition('data.block-ui') === '1', []);
+    const { name: userName } = React.useMemo(() => config('boot.data.user'), []);
+    const blockUi = React.useMemo(() => config('boot.data.block-ui') === '1', []);
 
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 

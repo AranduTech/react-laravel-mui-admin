@@ -1,9 +1,10 @@
 import app from "./app";
+import config from "./config";
 import { RouteReplacer } from "./types/route";
 
 const route = (name: string, replace: RouteReplacer = false) => {
 
-    const routes = app.getDefinition('routes');
+    const routes = config('boot.routes');
 
     let { [name]: url } = routes;
 
@@ -39,6 +40,6 @@ const route = (name: string, replace: RouteReplacer = false) => {
     return `/${newPath}`;
 };
 
-route.exists = (name: string) => !!app.getDefinition('routes')[name];
+route.exists = (name: string) => !!config(`boot.routes.${name}`);
 
 export default route;
