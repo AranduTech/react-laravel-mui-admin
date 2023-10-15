@@ -8,14 +8,15 @@ import modelRepository from '../../internals/singletons/ModelRepository';
 import Form, { BaseFormProps, FormProps } from './Form';
 
 import { useTranslation } from 'react-i18next';
-import { Model, ModelField } from '../../types/model';
+import { Model } from '../../types/model';
 import { AxiosResponse } from 'axios';
 import { LaravelItemResponse } from '../../types/laravel';
-import { FormState, UseFormOptions } from '../../types/form';
+import { FormFieldDefinition, FormState, UseFormOptions } from '../../types/form';
 import route from '../../route';
 import { RouteReplacer } from '../../types/route';
+import useApplyFilters from '../../useApplyFilters';
 
-const addMetaPropsToField = (item: Model, schema: string) => (field: ModelField) => ({
+const addMetaPropsToField = (item: Model, schema: string) => (field: FormFieldDefinition) => ({
     ...field,
     _meta: {
         model: item.className,
@@ -65,11 +66,11 @@ const ModelForm = ({
         ? [`admin.${item.className}.update`, { id: item.id }]
         : [`admin.${item.className}.create`, undefined];
 
-    const form = useForm({
+    const formOptions = useApplyFilters(`model_form_options_${item.className}_${schema}`, {
         initialValues: item.json(),
         method: 'POST',
         action: route(...routeParams),
-        onSuccess: (response) => {
+        onSuccess: (response: any) => {
             item.construct(response.data);
             onSuccess(response);
         },
@@ -77,11 +78,14 @@ const ModelForm = ({
         onError,
         onSubmit,
         onChange,
-        transformPayload: (payload) => ({
+        transformPayload: (payload: any) => ({
             ...payload,
             _type: schema,
         }),
-    });
+        preventStructureChange: false,
+    }, item);
+
+    const form = useForm(formOptions);
 
     // console.log(item);
 

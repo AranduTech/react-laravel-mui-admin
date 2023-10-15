@@ -40,6 +40,6 @@ const route = (name: string, replace: RouteReplacer = false) => {
     return `/${newPath}`;
 };
 
-route.exists = (name: string) => !!config(`boot.routes.${name}`);
+route.exists = (name: string) => !!config('boot.routes')[name];
 
 export default route;

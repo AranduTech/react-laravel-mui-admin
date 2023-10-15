@@ -100,9 +100,8 @@ const RepositoryIndex = () => {
     };
 
     const handleMassActionSubmit = ({ massAction, selected }: FormState) => {
-        // console.log(`run mass action ${massAction} on ${selected.length} items`, selected);
         doAction(
-            `respository_index_mass_action_${massAction}`,
+            `repository_index_mass_action_${massAction}`,
             selected,
             className,
         );

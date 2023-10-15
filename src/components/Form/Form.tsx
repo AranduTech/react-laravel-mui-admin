@@ -5,8 +5,7 @@ import Button from '@mui/material/Button';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
 
 import FormField from './FormField';
-import { UseFormTools } from '../../types/form';
-import { ModelField } from '../../types/model';
+import { FormFieldDefinition, UseFormTools } from '../../types/form';
 
 export interface BaseFormProps {
     component?: React.ElementType;
@@ -24,7 +23,7 @@ export interface BaseFormProps {
 
 export interface FormProps extends BaseFormProps {
     form: UseFormTools;
-    fields: ModelField[];
+    fields: FormFieldDefinition[];
 }
 
 const Form = ({

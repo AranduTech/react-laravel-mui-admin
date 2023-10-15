@@ -31,15 +31,15 @@ import ItemRow from './ItemRow';
 import useForm from '../../useForm';
 
 import mediaQuery from './mediaQuery';
-import { Model, ModelField, ModelTableColumnDefinition } from '../../types/model';
-import { FormError, FormState } from '../../types/form';
+import { Model, ModelTableColumnDefinition } from '../../types/model';
+import { FormError, FormFieldDefinition, FormState } from '../../types/form';
 import { useTranslation } from 'react-i18next';
 import Form from '../Form/Form';
 
 
 export interface PaginatedTableProps {
     items: Model[];
-    filter?: Array<ModelField>,
+    filter?: Array<FormFieldDefinition>,
     filtersApplied?: any,
     orderBy: string;
     massActions?: { label: string, name: string }[];

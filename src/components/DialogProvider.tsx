@@ -6,11 +6,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import dialogService, { DialogOptions } from '../internals/singletons/Dialog';
+import FormField from './Form/FormField';
+import useForm from '../useForm';
 
 interface DialogProviderOptions extends DialogOptions {
-    resolve: (result: boolean) => void;
+    resolve: (result: any) => void;
 };
 
 const DEFAULT_OPTION_STATE: DialogProviderOptions = {
@@ -38,6 +41,14 @@ const DialogProvider = () => {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const form = useForm({
+        initialValues: {},
+        preventStructureChange: false,
+        debug: true,
+    });
+
+    const { state: [data, setData] } = form;
 
     React.useEffect(() => {
         dialogService.onShow = (o: DialogProviderOptions) => {
@@ -83,6 +94,19 @@ const DialogProvider = () => {
                 <DialogContentText variant="body2">
                     {message}
                 </DialogContentText>
+                
+                {type === 'form' && options.form && (
+                    <Grid container spacing={2}>
+                        {options.form.map((field) => (
+                            <FormField
+                                key={field.name}
+                                field={field}
+                                wrapper={Grid}
+                                form={form}
+                            />
+                        ))}
+                    </Grid>
+                )}
             </DialogContent>
             <DialogActions>
                 {type !== 'alert' && (
@@ -97,6 +121,12 @@ const DialogProvider = () => {
                 )}
                 <Button
                     onClick={() => {
+                        if (type === 'form') {
+                            resolve(data);
+                            setData({});
+                            handleClose();
+                            return;
+                        }
                         resolve(true);
                         handleClose();
                     }}

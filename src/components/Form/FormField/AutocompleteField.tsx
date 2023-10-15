@@ -15,6 +15,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const {
         label, name, labeledBy = 'name', options: initialOptions, list,
         cached = true, debounce = 1000, _meta: { model, schema } = {},
+        reducedColumns = true,
         // eslint-disable-next-line no-unused-vars
         initialValue, gridItem, rows, multiple = false,
         ...props
@@ -49,7 +50,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         if (typeof list !== 'undefined') {
             setLoading(true);
             if (typeof list === 'string' && route.exists(`admin.${list}.list`)) {
-                axios(`${route(`admin.${list}.list`)}?q=${inputText}&per_page=30&reducedColumns`)
+                axios(`${route(`admin.${list}.list`)}?q=${inputText}&per_page=30${reducedColumns ? '&reducedColumns' : ''}`)
                     .then(handleRequestResponse)
                     .finally(() => setLoading(false));
                 return;

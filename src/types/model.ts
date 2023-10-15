@@ -1,7 +1,6 @@
-
-import { Grid2Props } from "@mui/material";
 import { BaseModel } from "../internals/BaseModel";
 import { ModelRepository } from "../internals/singletons/ModelRepository";
+import { FormFieldDefinition } from "./form";
 
 export interface ModelMaker {
     modelRepository: ModelRepository,
@@ -41,28 +40,6 @@ export type ModelSaveCallback = (options?: ModelSaveOptions) => Promise<boolean>
 
 export type ModelUseDataCallback = (options?: ModelUseDataOptions) => [data: object, setData: (data: object) => void];
 
-export interface ModelField {
-    name: string,
-    type?: 'label' | 'text' | 'email' | 'password' | 'tel' | 'number' | 'date' | 'checkbox' | 'radio' | 'select' | 'file' | 'textarea' | 'autocomplete',
-    label?: string,
-    initialValue?: any,
-    required?: boolean,
-    disabled?: boolean,
-    options?: Array<any>,
-    list?: string | {},
-    multiline?: boolean,
-    multiple?: boolean,
-    rows?: number,
-    labeledBy?: string,
-    cached?: boolean,
-    debounce?: number,
-    _meta?: {
-        model: string,
-        schema: string,
-    },
-    gridItem?: Grid2Props,
-}
-
 export interface ModelTableColumnDefinition {
     key: string,
     label: string,
@@ -71,7 +48,7 @@ export interface ModelTableColumnDefinition {
 
 export interface ModelSchemaAttributes {
     fields: {
-        [fieldSchema: string]: Array<ModelField>
+        [fieldSchema: string]: Array<FormFieldDefinition>
     },
     fillable: string[],
     relations: {
@@ -83,7 +60,7 @@ export interface ModelSchemaAttributes {
     tables: {
         [tableName: string]: {
             columns: Array<ModelTableColumnDefinition>,
-            filter?: Array<ModelField>,
+            filter?: Array<FormFieldDefinition>,
         }
     },
     web: string[],

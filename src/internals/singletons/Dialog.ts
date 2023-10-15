@@ -1,11 +1,14 @@
+import { FormFieldDefinition } from "../../types/form";
+
 
 export interface DialogOptions {
     message: string;
-    type?: 'alert' | 'confirm';
+    type?: 'alert' | 'confirm' | 'form';
     title?: string;
     dismissable?: boolean;
     confirmText?: string;
     cancelText?: string;
+    form?: Array<FormFieldDefinition>;
 }
 
 /**
@@ -31,7 +34,7 @@ class Dialog {
      * @return {Promise<boolean|object>} Uma promise que será resolvida quando
      * o diálogo for fechado.
      */
-    create(options: DialogOptions): Promise<boolean> {
+    create(options: DialogOptions): Promise<any> {
         return new Promise((resolve) => {
             if (typeof this.onShow === 'function') {
                 this.onShow({
@@ -49,7 +52,7 @@ class Dialog {
      * @param {string} message - A mensagem a ser exibida.
      */
     alert(message: string) {
-        this.create({ message });
+        return this.create({ message });
     }
 
     /**
@@ -66,6 +69,24 @@ class Dialog {
         return this.create({
             message,
             type: 'confirm',
+        });
+    }
+
+    /**
+     * Exibe um diálogo de formulário.
+     * É uma abreviação para `create({ type: 'form', message })`.
+     *
+     * @param {string} message - A mensagem a ser exibida.
+     * @return {Promise<object>} - Uma promise que será resolvida quando o
+     * diálogo for fechado. Se o usuário clicar no botão de confirmação, a promise
+     * será resolvida com um objeto contendo os valores dos campos do formulário.
+     * Se o usuário clicar no botão de cancelamento ou fechar o diálogo clicando
+     * fora dele, a promise será resolvida com `null`.
+     */
+    form(message: string): Promise<object|false> {
+        return this.create({
+            message,
+            type: 'form',
         });
     }
 

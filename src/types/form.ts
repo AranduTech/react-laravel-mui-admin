@@ -1,8 +1,31 @@
 // Imports
-import { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteRenderInputParams, TextFieldProps as MuiTextFieldProps, SelectChangeEvent } from '@mui/material';
-import { ModelField } from './model';
+import { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteRenderInputParams, Grid2Props, TextFieldProps as MuiTextFieldProps, SelectChangeEvent } from '@mui/material';
 import { ReactNode } from 'react';
 import { Method } from 'axios';
+
+
+export interface FormFieldDefinition {
+    name: string,
+    type?: 'label' | 'text' | 'email' | 'password' | 'tel' | 'number' | 'date' | 'checkbox' | 'radio' | 'select' | 'file' | 'textarea' | 'autocomplete',
+    label?: string,
+    initialValue?: any,
+    required?: boolean,
+    disabled?: boolean,
+    options?: Array<any>,
+    list?: string | {},
+    multiline?: boolean,
+    multiple?: boolean,
+    rows?: number,
+    labeledBy?: string,
+    cached?: boolean,
+    debounce?: number,
+    _meta?: {
+        model: string,
+        schema: string,
+    },
+    gridItem?: Grid2Props,
+    reducedColumns?: boolean,
+}
 
 
 // Primitive Value
@@ -92,6 +115,7 @@ export interface UseFormTools {
     errors: FormError[];
     state: [FormState, React.Dispatch<React.SetStateAction<FormState>>];
     isSubmitting: boolean;
+    submit: (e: any) => Promise<void>;
 }
 
 export interface FormError {
@@ -117,5 +141,5 @@ export interface UseFormOptions {
 
 export interface FormFieldProps {
     form: UseFormTools;
-    field: ModelField;
+    field: FormFieldDefinition;
 }

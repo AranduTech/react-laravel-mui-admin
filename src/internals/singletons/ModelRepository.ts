@@ -3,12 +3,13 @@ import makeBaseModel from '../makeBaseModel';
 import { dotSetter } from '../../support/object';
 import route from '../../route';
 import { RouteRegistrationMixins } from '../../types/route';
-import { Model, ModelConstructorAttributes, ModelField, ModelSchema } from '../../types/model';
+import { Model, ModelConstructorAttributes, ModelSchema } from '../../types/model';
 import { RouteObject } from 'react-router-dom';
 import { ReactNode } from 'react';
 
 import app from '../../app';
 import config from '../../config';
+import { FormFieldDefinition } from '../../types/form';
 
 /**
  * Class ModelRepository.
@@ -256,7 +257,7 @@ export class ModelRepository {
     createEmptyModelInstance(className: string, schema = 'default') {
         // console.log('creating instance ....');
 
-        const createClassInitialValues = (fields: ModelField[]) => fields
+        const createClassInitialValues = (fields: FormFieldDefinition[]) => fields
             .reduce((obj, field) => {
                 if (field.initialValue !== undefined) {
                     return dotSetter(obj, field.name, field.initialValue);

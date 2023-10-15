@@ -10,6 +10,7 @@ const dialog = (options: DialogOptions | string) => {
 
 dialog.alert = dialogService.alert.bind(dialogService);
 dialog.confirm = dialogService.confirm.bind(dialogService);
+dialog.form = dialogService.form.bind(dialogService);
 
 export default dialog;
 

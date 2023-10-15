@@ -19,7 +19,6 @@ const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'numb
     || (typeof value === 'object' && (
         // eslint-disable-next-line no-extra-parens
         (value instanceof Date || value instanceof File || value instanceof FileList)
-        || typeof value.toJSON === 'function'
         || Object.values(value).every(checkIfValueIsValid))
     );
 
@@ -201,56 +200,58 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         [data, setProp],
     );
 
+    const submit = React.useCallback(async (e: any) => {
+        if (preventDefault) {
+            e.preventDefault();
+        }
+
+        const errors = validate(data);
+        setErrors(errors);
+        if (errors.length > 0) {
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+            const submitted = await onSubmit(data, setErrors);
+
+            if (false !== submitted && action) {
+                const response = await axios({
+                    method,
+                    url: action,
+                    data: transformPayload(data),
+                });
+
+                onSuccess(response);
+            }
+        } catch (error: any) {
+            if (error.response?.status === 422) {
+                setErrors(Object.keys(error.response.data.errors).map((errorKey) => ({
+                    key: errorKey,
+                    message: error.response.data.errors[errorKey].join(', '),
+                })));
+            }
+            onError(error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }, [
+        preventDefault,
+        validate,
+        data,
+        onSubmit,
+        action,
+        method,
+        onSuccess,
+        onError,
+        transformPayload,
+    ]);
+
     const formProps: FormPropsCallback = React.useCallback(
         () => ({
-            onSubmit: async (e) => {
-                if (preventDefault) {
-                    e.preventDefault();
-                }
-
-                const errors = validate(data);
-                setErrors(errors);
-                if (errors.length > 0) {
-                    return;
-                }
-
-                try {
-                    setIsSubmitting(true);
-                    const submitted = await onSubmit(data, setErrors);
-
-                    if (false !== submitted && action) {
-                        const response = await axios({
-                            method,
-                            url: action,
-                            data: transformPayload(data),
-                        });
-
-                        onSuccess(response);
-                    }
-                } catch (error: any) {
-                    if (error.response?.status === 422) {
-                        setErrors(Object.keys(error.response.data.errors).map((errorKey) => ({
-                            key: errorKey,
-                            message: error.response.data.errors[errorKey].join(', '),
-                        })));
-                    }
-                    onError(error);
-                } finally {
-                    setIsSubmitting(false);
-                }
-            },
+            onSubmit: submit,
         }),
-        [
-            preventDefault,
-            validate,
-            data,
-            onSubmit,
-            action,
-            method,
-            onSuccess,
-            onError,
-            transformPayload,
-        ],
+        [submit]
     );
 
         // check if every value in `initialValues` is a simple primitive,
@@ -297,6 +298,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         checkProps,
         textFieldProps,
         autocompleteProps,
+        submit,
         isSubmitting,
     };
 };
