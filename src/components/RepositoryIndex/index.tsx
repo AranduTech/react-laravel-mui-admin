@@ -63,7 +63,11 @@ const RepositoryIndex = () => {
 
     const Model = React.useMemo(() => modelRepository.getModelClass(className), [className]);
 
-    const { tables: { default: defaultTable } } = React.useMemo(
+    const {
+        tables: { default: defaultTable },
+        importable,
+        exportable,
+    } = React.useMemo(
         () => modelRepository.getClassSchema(className),
         [className],
     );
@@ -96,11 +100,43 @@ const RepositoryIndex = () => {
     const anchorRef = React.useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    const options: ModelActions[] = [
-        { label: `${t('common.new')} ${t(`models.${className}.singular`)}`, callback: () => handleNewItem() },
-        { label: t('common.import'), callback: () => null },
-        { label: t('common.export'), callback: () => null },
-    ];
+    const options = React.useMemo(() => {
+        const opts: ModelActions[] = [
+            {
+                label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
+                callback: () => doAction(
+                    'repository_index_new_item',
+                    className,
+                    { navigate, setSearchParams }
+                )
+            },
+        ];
+
+        if (importable) {
+            opts.push({
+                label: t('common.import'),
+                callback: () => doAction(
+                    'repository_index_import_items',
+                    modelRepository.getClassSchema(className),
+                    className,
+                    null, // TO DO: here goes the select file
+                )
+            });
+        }
+        if (exportable) {
+            opts.push({
+                label: t('common.export'),
+                callback: () => doAction(
+                    'repository_index_export_items',
+                    modelRepository.getClassSchema(className),
+                    className,
+                    { setSearchParams }
+                )
+            });
+        }
+
+        return opts;
+    }, []);
 
     const handleSplitButtonClick = (callback: () => void,) => {
         callback();
@@ -186,10 +222,6 @@ const RepositoryIndex = () => {
         }
 
         doAction('repository_index_click_item', item, { navigate, setSearchParams });
-    };
-
-    const handleNewItem = () => {
-        doAction('repository_index_new_item', className, { navigate, setSearchParams });
     };
 
     // If the current tab is not in the list of tabs, set the tab to 'all'
@@ -289,14 +321,6 @@ const RepositoryIndex = () => {
                         </Grow>
                     )}
                 </Popper>
-
-                {/* <Button
-                    variant="contained"
-                    onClick={handleNewItem}
-                    sx={{ mb: 2 }}
-                >
-                    {t('common.new')} {t(`models.${className}.singular`)}
-                </Button> */}
             </Stack>
 
             <Grid

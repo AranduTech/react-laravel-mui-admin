@@ -84,7 +84,7 @@ export default {
 
                 const response = await axios({
                     url: route(`admin.${className}.massDelete`),
-                    method: 'POST', 
+                    method: 'POST',
                     data: { ids },
                 });
 
@@ -111,7 +111,7 @@ export default {
 
                 const response = await axios({
                     url: route(`admin.${className}.massRestore`),
-                    method: 'POST', 
+                    method: 'POST',
                     data: { ids },
                 });
 
@@ -138,7 +138,7 @@ export default {
 
                 const response = await axios({
                     url: route(`admin.${className}.massForceDelete`),
-                    method: 'POST', 
+                    method: 'POST',
                     data: { ids },
                 });
 
@@ -167,5 +167,54 @@ export default {
             searchParams.set('id', '');
             return searchParams;
         }, { replace: true });
+    },
+
+    importItems: (item: Model, className: string, file: any) => {
+        dialogService.create({
+            title: t('table.actions.import.title') as string,
+            message: t('table.actions.import.confirm'),
+            type: 'confirm',
+            confirmText: t('yes') as string,
+            cancelText: t('no') as string,
+        }).then(async (result) => {
+            if (result) {
+                const response = await item.import(file);
+    
+                    if (response) {
+                        toastService.success(t('common.imported'));
+    
+                        macroService.doAction('repository_index_refresh');
+                    } else {
+                        toastService.error(t('common.error'));
+                    }
+            }
+        });
+    },
+
+    exportItems: (item: Model, className: string, { setSearchParams }: any) => {
+        dialogService.create({
+            title: t('table.actions.export.title') as string,
+            message: t('table.actions.export.confirm'),
+            type: 'confirm',
+            confirmText: t('yes') as string,
+            cancelText: t('no') as string,
+        }).then(async (result) => {
+            if (result) {
+                setSearchParams(async () => {
+                    const { searchParams } = new URL(document.location.toString());
+                    searchParams.set('id', '');
+
+                    const response = await item.export(searchParams);
+    
+                    if (response) {
+                        toastService.success(t('common.exported'));
+    
+                        macroService.doAction('repository_index_refresh');
+                    } else {
+                        toastService.error(t('common.error'));
+                    }
+                }, { replace: true });
+            }
+        });
     },
 };

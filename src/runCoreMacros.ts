@@ -54,5 +54,13 @@ export default () => {
         'repository_index_new_item',
         repositoryIndexActions.newItem,
     );
+    macros.addAction(
+        'repository_index_import_items',
+        repositoryIndexActions.importItems,
+    );
+    macros.addAction(
+        'repository_index_export_items',
+        repositoryIndexActions.exportItems,
+    );
 };
 

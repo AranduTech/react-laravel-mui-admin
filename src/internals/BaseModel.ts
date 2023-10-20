@@ -474,6 +474,23 @@ export class BaseModel {
         return this.#key;
     }
 
+    /**
+     * 
+     */
+    import(file: any) {
+        console.log({ file });
+
+        return true;
+    }
+
+    /**
+     * 
+     */
+    export(searchParams: any) {
+        console.log({ searchParams });
+
+        return true;
+    }
 
 };
 
