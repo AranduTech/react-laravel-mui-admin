@@ -66,6 +66,8 @@ export interface ModelSchemaAttributes {
     web: string[],
     softDelete?: boolean,
     class: string,
+    importable?: boolean,
+    exportable?: boolean,
 }
 
 export interface ModelSchema {
