@@ -65,8 +65,8 @@ const RepositoryIndex = () => {
 
     const {
         tables: { default: defaultTable },
-        importable,
-        exportable,
+        importable = false,
+        exportable = false,
     } = React.useMemo(
         () => modelRepository.getClassSchema(className),
         [className],
@@ -100,43 +100,20 @@ const RepositoryIndex = () => {
     const anchorRef = React.useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    const options = React.useMemo(() => {
-        const opts: ModelActions[] = [
-            {
-                label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
-                callback: () => doAction(
-                    'repository_index_new_item',
-                    className,
-                    { navigate, setSearchParams }
-                )
-            },
-        ];
-
-        if (importable) {
-            opts.push({
-                label: t('common.import'),
-                callback: () => doAction(
-                    'repository_index_import_items',
-                    modelRepository.getClassSchema(className),
-                    className,
-                    null, // TO DO: here goes the select file
-                )
-            });
-        }
-        if (exportable) {
-            opts.push({
-                label: t('common.export'),
-                callback: () => doAction(
-                    'repository_index_export_items',
-                    modelRepository.getClassSchema(className),
-                    className,
-                    { setSearchParams }
-                )
-            });
-        }
-
-        return opts;
-    }, []);
+    const options: ModelActions[] = useApplyFilters(
+        'repository_index_model_actions',
+        [{
+            label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
+            callback: () => doAction(
+                'repository_index_new_item',
+                className,
+                { navigate, setSearchParams }
+            )
+        }],
+        Model,
+        className,
+        { importable, exportable },
+    );
 
     const handleSplitButtonClick = (callback: () => void,) => {
         callback();

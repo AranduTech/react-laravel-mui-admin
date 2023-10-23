@@ -94,7 +94,7 @@ const DialogProvider = () => {
                 <DialogContentText variant="body2">
                     {message}
                 </DialogContentText>
-                
+
                 {type === 'form' && options.form && (
                     <Grid container spacing={2}>
                         {options.form.map((field) => (

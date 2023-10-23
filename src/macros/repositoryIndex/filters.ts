@@ -1,7 +1,10 @@
 import { ActionItem } from '../../components/RepositoryIndex/ActionButton';
 import modelRepository from '../../internals/singletons/ModelRepository';
+
 import t from '../../t';
 import { Model } from '../../types/model';
+
+import doAction from '../../doAction';
 
 export default {
 
@@ -79,6 +82,36 @@ export default {
         });
 
         return newActions;
+    },
+
+    addModelImportExport: (
+        opts: any[],
+        model: Model,
+        className: string,
+        { importable, exportable }: any
+    ) => {
+        if (importable) {
+            opts.push({
+                label: t('common.import'),
+                callback: () => doAction(
+                    'repository_index_import_items',
+                    model,
+                    className,
+                )
+            });
+        }
+        if (exportable) {
+            opts.push({
+                label: t('common.export'),
+                callback: () => doAction(
+                    'repository_index_export_items',
+                    model,
+                    className,
+                )
+            });
+        }
+
+        return opts;
     },
 
 };
