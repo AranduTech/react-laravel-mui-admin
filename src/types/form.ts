@@ -38,7 +38,7 @@ type ValidKeyValue = PrimitiveValue | Date | File | FileList;
 export type FormValue = ValidKeyValue | Array<ValidKeyValue | FormState> | FormState;
 
 // Sanitize Input Callback
-type SanitizeInputCallback<T = HTMLInputElement> = (event: React.ChangeEvent<T>) => FormValue;
+type SanitizeInputCallback<T = React.ChangeEvent<HTMLInputElement>> = (event: T) => FormValue;
 
 type InputChangeEventHandler<T = HTMLInputElement> = (event: React.ChangeEvent<T>) => void;
 type SelectChangeEventHandler = (event: SelectChangeEvent<string | number | Date | null>, child: React.ReactNode) => void;
@@ -50,13 +50,13 @@ export interface InputProps {
     onChange: InputChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }
 // Input Props Callback
-export type InputPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<HTMLInputElement | HTMLSelectElement>) => InputProps;
+export type InputPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<React.ChangeEvent<HTMLInputElement | HTMLSelectElement>>) => InputProps;
 
 // TextField Props
-export interface TextFieldProps<T = HTMLInputElement> {
+export interface TextFieldProps<T = React.ChangeEvent<HTMLInputElement>, U = string | number | Date | null> {
     name: string;
-    value: string | number | Date | null;
-    onChange: (event: React.ChangeEvent<T>) => void;
+    value: U;
+    onChange: (event: T) => void;
     error?: boolean;
     helperText?: string;
 }
@@ -69,9 +69,9 @@ export interface FileFieldProps {
 }
 
 // TextField Props Callback
-export type TextFieldPropsCallback<T = HTMLInputElement | HTMLTextAreaElement> = (key: string, sanitizeFn?: SanitizeInputCallback<T>) => TextFieldProps<T>;
+export type TextFieldPropsCallback<T = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, U = string | number | Date | null> = (key: string, sanitizeFn?: SanitizeInputCallback<T>) => TextFieldProps<T, U>;
 
-export type FileFieldPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<HTMLInputElement>) => FileFieldProps;
+export type FileFieldPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<React.ChangeEvent<HTMLInputElement>>) => FileFieldProps;
 
 // Check Props
 export interface CheckProps {
@@ -121,6 +121,7 @@ export interface UseFormTools {
     checkProps: CheckPropsCallback;
     textFieldProps: TextFieldPropsCallback;
     fileFieldProps: FileFieldPropsCallback;
+    selectFieldProps: TextFieldPropsCallback<SelectChangeEvent, string>;
     autocompleteProps: AutocompletePropsCallback<any>;
     errors: FormError[];
     state: [FormState, React.Dispatch<React.SetStateAction<FormState>>];

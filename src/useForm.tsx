@@ -10,6 +10,7 @@ import {
     UseFormOptions,
     UseFormTools
 } from './types/form';
+import { SelectChangeEvent } from '@mui/material';
 
 const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'number', 'boolean'].includes(typeof value)
     || value === null
@@ -178,6 +179,19 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         [data, setProp, errors],
     );
 
+    const selectFieldProps: TextFieldPropsCallback<SelectChangeEvent, string> = React.useCallback(
+        (key, sanitizeFn = (e) => e.target.value) => ({
+            name: key,
+            value: dotAccessor(data, key) || '',
+            onChange: (e) => {
+                setProp(key, sanitizeFn(e));
+            },
+            error: errors.some((error) => error.key === key),
+            helperText: errors.find((error) => error.key === key)?.message,
+        }),
+        [data, setProp, errors],
+    );
+
     const fileFieldProps: FileFieldPropsCallback = React.useCallback(
         (key, sanitizeFn = (e) => e.target.files) => ({
             name: key,
@@ -320,6 +334,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         checkProps,
         textFieldProps,
         fileFieldProps,
+        selectFieldProps,
         autocompleteProps,
         submit,
         isSubmitting,

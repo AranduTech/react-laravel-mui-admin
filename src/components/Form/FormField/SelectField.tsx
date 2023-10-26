@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { FormFieldProps } from '../../../types/form';
 
@@ -17,7 +17,7 @@ const SelectField = ({ form, field }: FormFieldProps) => {
         ...props
     } = field;
 
-    const { textFieldProps } = form;
+    const { selectFieldProps: textFieldProps } = form;
 
     const { helperText, ...selectProps } = textFieldProps(name);
 
