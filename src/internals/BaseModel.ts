@@ -84,7 +84,7 @@ export class BaseModel {
 
                 const relationData = attributes[key];
                 const isSingle = ['BelongsTo', 'MorphOne', 'MorphTo'].includes(type);
-                
+
                 if (isSingle && typeof relationData === 'object' && relationData !== null) {
                     newRelations[key] = new Model(relationData as ModelConstructorAttributes);
                 }
@@ -474,6 +474,74 @@ export class BaseModel {
         return this.#key;
     }
 
+    /**
+     * Retorna 'true' caso o arquivo tenha sido importado com sucesso.
+     * 
+     * @param file - Caminho do arquivo
+     * @param className - Nome da classe
+     * @returns - Promise com o resultado da requisição.
+     */
+    static import(file: any, className: String) {
+        const url = route(`admin.${className}.import`);
+
+        return new Promise((resolve) => {
+            if (!url) {
+                resolve(false);
+                return;
+            }
+
+            axios({
+                url,
+                method: 'POST',
+                data: { file },
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        resolve(true);
+                        return;
+                    }
+                    resolve(false);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    resolve(false);
+                });
+        });
+    }
+
+    /**
+     * Retorna 'true' caso o arquivo tenha sido exportado com sucesso.
+     * 
+     * @param searchParams - Parâmetros de busca
+     * @param className - Nome da classe
+     * @returns - Promise com o resultado da requisição.
+     */
+    static export(searchParams: any, className: String) {
+        const url = route(`admin.${className}.export`, { searchParams });
+
+        return new Promise((resolve) => {
+            if (!url) {
+                resolve(false);
+                return;
+            }
+
+            axios({
+                url,
+                method: 'POST',
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        resolve(true);
+                        return;
+                    }
+                    resolve(false);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    resolve(false);
+                });
+        });
+    }
 
 };
 

@@ -12,6 +12,14 @@ import Stack from '@mui/material/Stack';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Unstable_Grid2';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 
 import { useTranslation } from 'react-i18next';
 
@@ -35,6 +43,10 @@ interface ModelTab {
     label: string;
 }
 
+interface ModelActions {
+    label: string;
+    callback: () => void;
+}
 
 const RepositoryIndex = () => {
     const navigate = useNavigate();
@@ -51,7 +63,11 @@ const RepositoryIndex = () => {
 
     const Model = React.useMemo(() => modelRepository.getModelClass(className), [className]);
 
-    const { tables: { default: defaultTable } } = React.useMemo(
+    const {
+        tables: { default: defaultTable },
+        importable = false,
+        exportable = false,
+    } = React.useMemo(
         () => modelRepository.getClassSchema(className),
         [className],
     );
@@ -79,6 +95,52 @@ const RepositoryIndex = () => {
         className,
         tab,
     );
+
+    const [open, setOpen] = React.useState(false);
+    const anchorRef = React.useRef<HTMLDivElement>(null);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+    const options: ModelActions[] = useApplyFilters(
+        'repository_index_model_actions',
+        [{
+            label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
+            callback: () => doAction(
+                'repository_index_new_item',
+                className,
+                { navigate, setSearchParams }
+            )
+        }],
+        Model,
+        className,
+        { importable, exportable },
+    );
+
+    const handleSplitButtonClick = (callback: () => void,) => {
+        callback();
+    };
+
+    const handleSplitMenuItemClick = (
+        event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+        index: number,
+    ) => {
+        setSelectedIndex(index);
+        setOpen(false);
+    };
+
+    const handleSplitMenuToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
+    };
+
+    const handleSplitMenuClose = (event: Event) => {
+        if (
+            anchorRef.current &&
+            anchorRef.current.contains(event.target as HTMLElement)
+        ) {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     const closeDrawer = () => setSearchParams((searchParams) => {
         searchParams.delete('id');
@@ -139,10 +201,6 @@ const RepositoryIndex = () => {
         doAction('repository_index_click_item', item, { navigate, setSearchParams });
     };
 
-    const handleNewItem = () => {
-        doAction('repository_index_new_item', className, { navigate, setSearchParams });
-    };
-
     // If the current tab is not in the list of tabs, set the tab to 'all'
     React.useEffect(() => {
         if (tab !== 'all' && !modelTabs.find((t) => t.name === tab)) {
@@ -188,13 +246,58 @@ const RepositoryIndex = () => {
                         ))}
                     </Tabs>
                 )}
-                <Button
-                    variant="contained"
-                    onClick={handleNewItem}
-                    sx={{ mb: 2 }}
+
+                <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+                    <Button onClick={() => handleSplitButtonClick(options[selectedIndex].callback)}>
+                        {options[selectedIndex].label}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        aria-controls={open ? 'split-button-menu' : undefined}
+                        aria-expanded={open ? 'true' : undefined}
+                        aria-label="select merge strategy"
+                        aria-haspopup="menu"
+                        onClick={handleSplitMenuToggle}
+                    >
+                        <ArrowDropDownIcon />
+                    </Button>
+                </ButtonGroup>
+                <Popper
+                    sx={{ zIndex: 9 }}
+                    open={open}
+                    anchorEl={anchorRef.current}
+                    role={undefined}
+                    transition
+                    disablePortal
                 >
-                    {t('common.new')} {t(`models.${className}.singular`)}
-                </Button>
+                    {({ TransitionProps, placement }) => (
+                        <Grow
+                            {...TransitionProps}
+                            style={{
+                                transformOrigin: placement === 'bottom'
+                                    ? 'center top'
+                                    : 'center bottom',
+                            }}
+                        >
+                            <Paper>
+                                <ClickAwayListener onClickAway={handleSplitMenuClose}>
+                                    <MenuList id="split-button-menu" autoFocusItem>
+                                        {options.map((option, index) => (
+                                            <MenuItem
+                                                key={option.label}
+                                                selected={index === selectedIndex}
+                                                onClick={(event) => handleSplitMenuItemClick(event, index)}
+                                            >
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </MenuList>
+                                </ClickAwayListener>
+                            </Paper>
+                        </Grow>
+                    )}
+                </Popper>
             </Stack>
 
             <Grid

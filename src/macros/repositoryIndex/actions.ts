@@ -84,7 +84,7 @@ export default {
 
                 const response = await axios({
                     url: route(`admin.${className}.massDelete`),
-                    method: 'POST', 
+                    method: 'POST',
                     data: { ids },
                 });
 
@@ -111,7 +111,7 @@ export default {
 
                 const response = await axios({
                     url: route(`admin.${className}.massRestore`),
-                    method: 'POST', 
+                    method: 'POST',
                     data: { ids },
                 });
 
@@ -138,7 +138,7 @@ export default {
 
                 const response = await axios({
                     url: route(`admin.${className}.massForceDelete`),
-                    method: 'POST', 
+                    method: 'POST',
                     data: { ids },
                 });
 
@@ -167,5 +167,64 @@ export default {
             searchParams.set('id', '');
             return searchParams;
         }, { replace: true });
+    },
+
+    importItems: (model: Model, className: string) => {
+        dialogService.create({
+            type: 'form',
+            title: t('table.actions.import.title') as string,
+            message: t('table.actions.import.file'),
+            form: [
+                {
+                    type: 'file',
+                    name: 'file',
+                    accept: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+                    required: true,
+                }
+            ],
+            confirmText: t('yes') as string,
+            cancelText: t('no') as string,
+        }).then(async (result) => {
+            if (result) {
+                const formData = new FormData();
+                formData.append('file', result.file);
+
+                console.log({ formData });
+
+                const response = await model.import(formData, className);
+
+                if (response) {
+                    toastService.success(t('common.imported'));
+
+                    macroService.doAction('repository_index_refresh');
+                } else {
+                    toastService.error(t('common.error'));
+                }
+            }
+        });
+    },
+
+    exportItems: (model: Model, className: string) => {
+        dialogService.create({
+            type: 'confirm',
+            title: t('table.actions.export.title') as string,
+            message: t('table.actions.export.confirm'),
+            confirmText: t('yes') as string,
+            cancelText: t('no') as string,
+        }).then(async (result) => {
+            if (result) {
+                const { searchParams } = new URL(document.location.toString());
+
+                const response = await model.export(searchParams, className);
+
+                if (response) {
+                    toastService.success(t('common.exported'));
+
+                    macroService.doAction('repository_index_refresh');
+                } else {
+                    toastService.error(t('common.error'));
+                }
+            }
+        });
     },
 };
