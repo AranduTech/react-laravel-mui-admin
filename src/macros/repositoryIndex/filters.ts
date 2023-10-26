@@ -92,7 +92,7 @@ export default {
     ) => {
         if (importable) {
             opts.push({
-                label: t('common.import'),
+                label: `${t('common.import')} ${t(`models.${className}.plural`)}`,
                 callback: () => doAction(
                     'repository_index_import_items',
                     model,
@@ -102,7 +102,7 @@ export default {
         }
         if (exportable) {
             opts.push({
-                label: t('common.export'),
+                label: `${t('common.export')} ${t(`models.${className}.plural`)}`,
                 callback: () => doAction(
                     'repository_index_export_items',
                     model,

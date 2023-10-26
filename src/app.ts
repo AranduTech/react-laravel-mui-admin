@@ -13,7 +13,10 @@ const app = {
 
         registerConfig({
             ...config,
-            boot: data,
+            boot: {
+                ...config.boot,
+                ...data,
+            },
         });
 
         setupLang();

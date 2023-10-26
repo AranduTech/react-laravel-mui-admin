@@ -17,7 +17,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
+import MuiPopper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
@@ -37,6 +37,8 @@ import mediaQuery from './mediaQuery';
 import { FormState } from '../../types/form';
 import doAction from '../../doAction';
 import { Model } from '../../types/model';
+
+const Popper = MuiPopper as any;
 
 interface ModelTab {
     name: string;
@@ -251,17 +253,19 @@ const RepositoryIndex = () => {
                     <Button onClick={() => handleSplitButtonClick(options[selectedIndex].callback)}>
                         {options[selectedIndex].label}
                     </Button>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        aria-controls={open ? 'split-button-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-label="select merge strategy"
-                        aria-haspopup="menu"
-                        onClick={handleSplitMenuToggle}
-                    >
-                        <ArrowDropDownIcon />
-                    </Button>
+                    {options.length > 1 && (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            aria-controls={open ? 'split-button-menu' : undefined}
+                            aria-expanded={open ? 'true' : undefined}
+                            aria-label="select merge strategy"
+                            aria-haspopup="menu"
+                            onClick={handleSplitMenuToggle}
+                        >
+                            <ArrowDropDownIcon />
+                        </Button>
+                    )}
                 </ButtonGroup>
                 <Popper
                     sx={{ zIndex: 9 }}
@@ -271,7 +275,7 @@ const RepositoryIndex = () => {
                     transition
                     disablePortal
                 >
-                    {({ TransitionProps, placement }) => (
+                    {({ TransitionProps, placement }: any) => (
                         <Grow
                             {...TransitionProps}
                             style={{

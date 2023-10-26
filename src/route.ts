@@ -1,5 +1,5 @@
-import app from "./app";
 import config from "./config";
+
 import { RouteReplacer } from "./types/route";
 
 const route = (name: string, replace: RouteReplacer = false) => {
