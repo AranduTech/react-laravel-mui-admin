@@ -7,12 +7,14 @@ import LabelField from './FormField/LabelField';
 import SelectField from './FormField/SelectField';
 import { FormFieldProps } from '../../types/form';
 import useApplyFilters from '../../useApplyFilters';
+import FileField from './FormField/FileField';
 
 const fieldTypeMapping: { [key: string]: React.ElementType } = {
     select: SelectField,
     checkbox: CheckboxField,
     autocomplete: AutocompleteField,
     label: LabelField,
+    file: FileField,
 };
 
 const FormField = ({ form, field, wrapper: WrapperComponent }: FormFieldProps & { wrapper: React.ElementType }) => {

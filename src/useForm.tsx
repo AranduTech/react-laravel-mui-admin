@@ -5,7 +5,7 @@ import { dotAccessor, dotExists, dotSetter } from './support/object';
 
 import axios from 'axios';
 import {
-    AutocompletePropsCallback, AutocompletePropsOptions, CheckPropsCallback, FormError,
+    AutocompletePropsCallback, AutocompletePropsOptions, CheckPropsCallback, FileFieldPropsCallback, FormError,
     FormPropsCallback, FormState, InputPropsCallback, SetPropCallback, TextFieldPropsCallback,
     UseFormOptions,
     UseFormTools
@@ -92,7 +92,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         onChange: onChangeFn = () => null, debug = false, onError: onErrorFn = () => null,
         action, method = 'get', onSuccess: onSuccessFn = () => null,
         transformPayload: transformPayloadFn = (payload) => payload,
-        preventStructureChange = true,
+        preventStructureChange = false,
     } = options;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,6 +176,28 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
             helperText: errors.find((error) => error.key === key)?.message,
         }),
         [data, setProp, errors],
+    );
+
+    const fileFieldProps: FileFieldPropsCallback = React.useCallback(
+        (key, sanitizeFn = (e) => e.target.files) => ({
+            name: key,
+            onChange: (e) => {
+                setProp(key, sanitizeFn(e));
+            },
+            error: errors.some((error) => error.key === key),
+            helperText: errors.find((error) => error.key === key)?.message
+                || (() => {
+                    const fileOrFiles = dotAccessor(data, key);
+                    if (fileOrFiles instanceof FileList) {
+                        return `${fileOrFiles.length} arquivo(s) selecionado(s)`;
+                    }
+                    if (fileOrFiles instanceof File) {
+                        return fileOrFiles.name;
+                    }
+                    return '';
+                })(),
+        }),
+        [setProp, errors, data],
     );
 
     const inputProps: InputPropsCallback = React.useCallback(
@@ -297,6 +319,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         formProps,
         checkProps,
         textFieldProps,
+        fileFieldProps,
         autocompleteProps,
         submit,
         isSubmitting,

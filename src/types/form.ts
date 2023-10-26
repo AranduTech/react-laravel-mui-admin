@@ -53,16 +53,25 @@ export interface InputProps {
 export type InputPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<HTMLInputElement | HTMLSelectElement>) => InputProps;
 
 // TextField Props
-export interface TextFieldProps {
+export interface TextFieldProps<T = HTMLInputElement> {
     name: string;
     value: string | number | Date | null;
-    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onChange: (event: React.ChangeEvent<T>) => void;
+    error?: boolean;
+    helperText?: string;
+}
+
+export interface FileFieldProps {
+    name: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     error?: boolean;
     helperText?: string;
 }
 
 // TextField Props Callback
-export type TextFieldPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<HTMLInputElement | HTMLTextAreaElement>) => TextFieldProps;
+export type TextFieldPropsCallback<T = HTMLInputElement | HTMLTextAreaElement> = (key: string, sanitizeFn?: SanitizeInputCallback<T>) => TextFieldProps<T>;
+
+export type FileFieldPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<HTMLInputElement>) => FileFieldProps;
 
 // Check Props
 export interface CheckProps {
@@ -110,7 +119,8 @@ export interface UseFormTools {
     formProps: Function;
     inputProps: InputPropsCallback;
     checkProps: CheckPropsCallback;
-    textFieldProps: Function;
+    textFieldProps: TextFieldPropsCallback;
+    fileFieldProps: FileFieldPropsCallback;
     autocompleteProps: AutocompletePropsCallback<any>;
     errors: FormError[];
     state: [FormState, React.Dispatch<React.SetStateAction<FormState>>];
