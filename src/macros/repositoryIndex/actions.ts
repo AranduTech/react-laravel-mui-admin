@@ -217,8 +217,17 @@ export default {
                     macroService.doAction('repository_index_refresh');
                 }
             } catch (error: any) {
-                if (error.response.status === 422) {
-                    toastService.error(error.response.data.message);
+                if (error.response?.status === 422) {
+
+                    const { response } = error;
+
+                    const msg = `${response.data.message}`
+                        + '\n\n'
+                        + Object.keys(response.data.errors)
+                            .map((prop) => `${prop}: ${response.data.errors[prop].join(' ')}`)
+                            .join('\n');
+
+                    toastService.error(msg);
                 } else {
                     toastService.error(t('common.error'));
                 }
@@ -228,7 +237,7 @@ export default {
         });
     },
 
-    exportItems: (className: string) => {
+    exportItems: (className: string, search: string) => {
         dialogService.create({
             type: 'confirm',
             title: t('table.actions.export.title') as string,
@@ -237,17 +246,41 @@ export default {
             cancelText: t('no') as string,
         }).then(async (result) => {
             if (result) {
-                // const { searchParams } = new URL(document.location.toString());
+                // const { searchParams } = new URL(document.location.toString());]
 
-                // const response = await model.export(searchParams, className);
+                const response = await axios(`${route(`admin.${className}.export`)}?${search}`, {
+                    responseType: 'blob',
+                });
 
-                // if (response) {
-                //     toastService.success(t('common.exported'));
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-                //     macroService.doAction('repository_index_refresh');
-                // } else {
-                //     toastService.error(t('common.error'));
-                // }
+                /**
+                 * Convert your blob into a Blob URL
+                 * (a special url that points to an object in the browser's memory)
+                 */
+                const blobUrl = URL.createObjectURL(blob);
+
+                // Create a link element
+                const link = document.createElement('a');
+
+                // Set link's href to point to the Blob URL
+                link.href = blobUrl;
+                link.download = `${className}.xlsx`;
+
+                // Append link to the body
+                document.body.appendChild(link);
+
+                // Dispatch click event on the link
+                // This is necessary as link.click() does not work on the latest firefox
+                link.dispatchEvent(new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window,
+                }));
+
+                // Remove link from body
+                document.body.removeChild(link);
+
             }
         });
     },

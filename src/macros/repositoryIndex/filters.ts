@@ -106,10 +106,17 @@ export default {
         if (exportable) {
             toBeAdded.push({
                 label: `${t('common.export')} ${t(`models.${className}.plural`)}`,
-                callback: () => doAction(
-                    'repository_index_export_items',
-                    className,
-                )
+                callback: () => {
+                    const { searchParams } = new URL(window.location.href);
+
+                    const search = searchParams.toString();
+
+                    doAction(
+                        'repository_index_export_items',
+                        className,
+                        search,
+                    );
+                }
             });
         }
 
