@@ -13,7 +13,6 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Unstable_Grid2';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
@@ -37,6 +36,7 @@ import mediaQuery from './mediaQuery';
 import { FormState } from '../../types/form';
 import doAction from '../../doAction';
 import { Model } from '../../types/model';
+import Icon from '../Icon';
 
 const Popper = MuiPopper as any;
 
@@ -257,11 +257,11 @@ const RepositoryIndex = () => {
                             size="small"
                             aria-controls={open ? 'split-button-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
-                            aria-label="select merge strategy"
+                            aria-label="select model action"
                             aria-haspopup="menu"
                             onClick={handleSplitMenuToggle}
                         >
-                            <ArrowDropDownIcon />
+                            <Icon name="arrowDropDown" />
                         </Button>
                     )}
                 </ButtonGroup>
