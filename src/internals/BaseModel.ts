@@ -474,39 +474,5 @@ export class BaseModel {
         return this.#key;
     }
 
-    /**
-     * Retorna 'true' caso o arquivo tenha sido exportado com sucesso.
-     * 
-     * @param searchParams - Parâmetros de busca
-     * @param className - Nome da classe
-     * @returns - Promise com o resultado da requisição.
-     */
-    static export(searchParams: any, className: String) {
-        const url = route(`admin.${className}.export`, { searchParams });
-
-        return new Promise((resolve) => {
-            if (!url) {
-                resolve(false);
-                return;
-            }
-
-            axios({
-                url,
-                method: 'POST',
-            })
-                .then((response) => {
-                    if (response.status === 200) {
-                        resolve(true);
-                        return;
-                    }
-                    resolve(false);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    resolve(false);
-                });
-        });
-    }
-
 };
 
