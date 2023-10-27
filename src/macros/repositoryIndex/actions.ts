@@ -169,7 +169,7 @@ export default {
         }, { replace: true });
     },
 
-    importItems: (model: Model, className: string) => {
+    importItems: (className: string) => {
         dialogService.create({
             type: 'form',
             title: t('table.actions.import.title') as string,
@@ -178,33 +178,57 @@ export default {
                 {
                     type: 'file',
                     name: 'file',
-                    accept: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+                    inputProps: {
+                        accept: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+                    },
                     required: true,
                 }
             ],
-            confirmText: t('yes') as string,
-            cancelText: t('no') as string,
+            confirmText: t('common.submit') as string,
         }).then(async (result) => {
-            if (result) {
+            if (!result) {
+                return;
+            }
+
+            try {     
                 const formData = new FormData();
                 formData.append('file', result.file);
 
                 console.log({ formData });
 
-                const response = await model.import(formData, className);
+                const url = route(`admin.${className}.import`);
 
-                if (response) {
-                    toastService.success(t('common.imported'));
+                const response = await axios({
+                    url,
+                    method: 'POST',
+                    data: formData,
+                });
 
+                if (response.status === 200) {
+                    toastService.success(
+                        t(
+                            'common.imported', 
+                            {
+                                created: response.data.created,
+                                skipped: response.data.skipped
+                            }
+                        )
+                    );
                     macroService.doAction('repository_index_refresh');
+                }
+            } catch (error: any) {
+                if (error.response.status === 422) {
+                    toastService.error(error.response.data.message);
                 } else {
                     toastService.error(t('common.error'));
                 }
+                
             }
+            
         });
     },
 
-    exportItems: (model: Model, className: string) => {
+    exportItems: (className: string) => {
         dialogService.create({
             type: 'confirm',
             title: t('table.actions.export.title') as string,
@@ -213,17 +237,17 @@ export default {
             cancelText: t('no') as string,
         }).then(async (result) => {
             if (result) {
-                const { searchParams } = new URL(document.location.toString());
+                // const { searchParams } = new URL(document.location.toString());
 
-                const response = await model.export(searchParams, className);
+                // const response = await model.export(searchParams, className);
 
-                if (response) {
-                    toastService.success(t('common.exported'));
+                // if (response) {
+                //     toastService.success(t('common.exported'));
 
-                    macroService.doAction('repository_index_refresh');
-                } else {
-                    toastService.error(t('common.error'));
-                }
+                //     macroService.doAction('repository_index_refresh');
+                // } else {
+                //     toastService.error(t('common.error'));
+                // }
             }
         });
     },

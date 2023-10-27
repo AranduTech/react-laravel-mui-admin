@@ -26,6 +26,7 @@ export interface FormFieldDefinition {
     gridItem?: Grid2Props,
     reducedColumns?: boolean,
     accept?: string,
+    inputProps?: any,
 }
 
 

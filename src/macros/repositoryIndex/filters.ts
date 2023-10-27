@@ -86,32 +86,37 @@ export default {
 
     addModelImportExport: (
         opts: any[],
-        model: Model,
         className: string,
-        { importable, exportable }: any
     ) => {
+        const toBeAdded = [];
+
+        const { 
+            importable = false, exportable = false 
+        } = modelRepository.getClassSchema(className);
+
         if (importable) {
-            opts.push({
+            toBeAdded.push({
                 label: `${t('common.import')} ${t(`models.${className}.plural`)}`,
                 callback: () => doAction(
                     'repository_index_import_items',
-                    model,
                     className,
                 )
             });
         }
         if (exportable) {
-            opts.push({
+            toBeAdded.push({
                 label: `${t('common.export')} ${t(`models.${className}.plural`)}`,
                 callback: () => doAction(
                     'repository_index_export_items',
-                    model,
                     className,
                 )
             });
         }
 
-        return opts;
+        return [
+            ...opts,
+            ...toBeAdded,
+        ];
     },
 
 };

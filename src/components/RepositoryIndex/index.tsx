@@ -112,9 +112,7 @@ const RepositoryIndex = () => {
                 { navigate, setSearchParams }
             )
         }],
-        Model,
         className,
-        { importable, exportable },
     );
 
     const handleSplitButtonClick = (callback: () => void,) => {
