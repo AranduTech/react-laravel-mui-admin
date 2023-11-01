@@ -22,10 +22,17 @@ class Config {
      * Obtém uma configuração do projeto.
      *
      * @param {string} path - O caminho da configuração.
+     * @param {any} defaultValue - O valor padrão.
      * @return {any} A configuração.
      */
-    config(path: string) {
-        return dotAccessor(this.appConfiguration, path);
+    config(path: string, defaultValue?: any) {
+        const value = dotAccessor(this.appConfiguration, path);
+
+        if (value === undefined) {
+            return defaultValue;
+        }
+
+        return value;
     }
 
 }
