@@ -3,8 +3,6 @@ import addFilter from './addFilter';
 import app from './app';
 import applyFilters from './applyFilters';
 import auth from './auth';
-import blade from './blade';
-import bootstrapApp from './bootstrapApp';
 import config from './config';
 import dialog from './dialog';
 import doAction from './doAction';
@@ -24,14 +22,14 @@ import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
 
+import * as components from './components';
+
 export {
     addAction,
     addFilter,
     applyFilters,
     app,
     auth,
-    blade,
-    bootstrapApp,
     config,
     dialog,
     doAction,
@@ -51,3 +49,19 @@ export {
     useFetchList,
     useForm,
 }
+
+export const CsrfToken = components.CsrfToken;
+export const DialogProvider = components.DialogProvider;
+export const Icon = components.Icon;
+export const Link = components.Link;
+export const Loading = components.Loading;
+export const RecursiveList = components.RecursiveList;
+export const RecursiveMenu = components.RecursiveMenu;
+export const SideMenuLayout = components.SideMenuLayout;
+export const Suspense = components.Suspense;
+export const AsyncModelForm = components.AsyncModelForm;
+export const ModelForm = components.ModelForm;
+export const Form = components.Form;
+export const FormField = components.FormField;
+export const RepositoryIndex = components.RepositoryIndex;
+export const ToastProvider = components.ToastProvider;
