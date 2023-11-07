@@ -16,13 +16,20 @@ import route from '../../route';
 import { RouteReplacer } from '../../types/route';
 import useApplyFilters from '../../useApplyFilters';
 
-const addMetaPropsToField = (item: Model, schema: string) => (field: FormFieldDefinition) => ({
-    ...field,
-    _meta: {
-        model: item.className,
-        schema,
-    },
-});
+const addMetaPropsToField = (item: Model, schema: string) => (field: FormFieldDefinition) => {
+    const withMeta = {
+        ...field,
+        _meta: {
+            model: item.className,
+            schema,
+        },
+    };
+    if (field.type === 'autocomplete' && typeof field.list === 'undefined') {
+        withMeta.list = modelRepository.getClassSchema(item.className).relations[field.name].model;
+    }
+
+    return withMeta;
+};
 
 export interface BaseModelFormProps extends BaseFormProps {
     schema?: string;
@@ -88,11 +95,15 @@ const ModelForm = ({
     const form = useForm(formOptions);
 
     // console.log(item);
+    const mappedFields = React.useMemo(
+        () => fields.map(addMetaPropsToField(item, schema)),
+        [fields, item, schema]
+    );
 
     return (
         <Form
             form={form}
-            fields={fields.map(addMetaPropsToField(item, schema))}
+            fields={mappedFields}
             alert={item.deletedAt ? t('table.cantEditTrashed') as string : undefined}
             showSubmitButton={item.deletedAt === null}
             {...props}
