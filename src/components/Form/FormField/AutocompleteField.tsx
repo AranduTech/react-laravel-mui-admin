@@ -83,7 +83,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                 .then(handleRequestResponse)
                 .finally(() => setLoading(false));
         }
-    }, debounce), []);
+    }, debounce), [...usesDataDependencies]);
 
     React.useEffect(() => {
         throttledRequest(list, inputText, name, cached, model, schema);
