@@ -15,13 +15,15 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const {
         label, name, labeledBy = 'name', options: initialOptions, list,
         cached = true, debounce = 1000, _meta: { model, schema } = {},
-        reducedColumns = true,
+        reducedColumns = true, usesData = [],
         // eslint-disable-next-line no-unused-vars
         initialValue, gridItem, rows, multiple = false,
         ...props
     } = field;
 
-    const { autocompleteProps: autocompletePropsFn } = form;
+    const { state: [data], autocompleteProps: autocompletePropsFn } = form;
+
+    const usesDataDependencies = usesData.map((useData) => data[useData]);
 
     const { value, ...autocompleteProps } = React.useMemo(
         () => autocompletePropsFn(name, { textFieldProps: { label: label || name } }),
@@ -49,13 +51,35 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
 
         if (typeof list !== 'undefined') {
             setLoading(true);
+            const search = new URLSearchParams();
+            search.set('q', inputText);
+            if (usesData.length) {
+                search.set('filters', JSON.stringify(usesData.reduce((acc: any, key) => {
+                    acc[key] = data[key];
+                    return acc;
+                }, {})))
+            }
             if (typeof list === 'string' && route.exists(`admin.${list}.list`)) {
-                axios(`${route(`admin.${list}.list`)}?q=${inputText}&per_page=30${reducedColumns ? '&reducedColumns' : ''}`)
+                search.set('per_page', '30');
+                if (reducedColumns) {
+                    search.set('reducedColumns', 'true');
+                }
+                if (usesData.length) {
+                    search.set('filters', JSON.stringify(usesData.reduce((acc: any, key) => {
+                        acc[key] = data[key];
+                        return acc;
+                    }, {})))
+                }
+                axios(`${route(`admin.${list}.list`)}?${search.toString()}`)
                     .then(handleRequestResponse)
                     .finally(() => setLoading(false));
                 return;
             }
-            axios(`${route('admin.autocomplete')}?q=${inputText}&name=${name}&model=${model}&schema=${schema}`)
+            search.set('name', name);
+            search.set('model', model);
+            search.set('schema', schema);
+
+            axios(`${route('admin.autocomplete')}?${search.toString()}`)
                 .then(handleRequestResponse)
                 .finally(() => setLoading(false));
         }
@@ -63,7 +87,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
 
     React.useEffect(() => {
         throttledRequest(list, inputText, name, cached, model, schema);
-    }, [list, inputText, name, cached, model, schema, throttledRequest]);
+    }, [list, inputText, name, cached, model, schema, throttledRequest, ...usesDataDependencies]);
 
     return (
         <Autocomplete

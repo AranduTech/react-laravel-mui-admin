@@ -27,6 +27,8 @@ export interface FormFieldDefinition {
     reducedColumns?: boolean,
     accept?: string,
     inputProps?: any,
+    usesData?: string[],
+
 }
 
 
