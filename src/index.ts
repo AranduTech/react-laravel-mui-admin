@@ -11,7 +11,6 @@ import modelRepository from './modelRepository';
 import removeAction from './removeAction';
 import removeFilter from './removeFilter';
 import route from './route';
-import runCoreMacros from './runCoreMacros';
 import t from './t';
 import toast from './toast';
 import useAddAction from './useAddAction';
@@ -23,6 +22,9 @@ import useFetchList from './useFetchList';
 import useForm from './useForm';
 
 import * as components from './components';
+
+import actions from './macros/repositoryIndex/actions';
+import filters from './macros/repositoryIndex/filters';
 
 export {
     addAction,
@@ -38,7 +40,6 @@ export {
     removeAction,
     removeFilter,
     route,
-    runCoreMacros,
     t,
     toast,
     useAddAction,
@@ -65,3 +66,8 @@ export const Form = components.Form;
 export const FormField = components.FormField;
 export const RepositoryIndex = components.RepositoryIndex;
 export const ToastProvider = components.ToastProvider;
+
+export const macros = {
+    actions,
+    filters,
+};

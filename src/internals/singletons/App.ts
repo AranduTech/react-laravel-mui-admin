@@ -5,11 +5,29 @@ import { AppConfiguration } from "../../types/config";
 import registerConfig from "../registerConfig";
 import setupLang from "../setupLang";
 import { LaravelMuiAdminPlugin } from "../../types/plugin";
+import { RouteObject, RouterProviderProps, createBrowserRouter } from "react-router-dom";
+import runCoreMacros from "../runCoreMacros";
+import { Theme, createTheme } from "@mui/material";
+
+type Router = RouterProviderProps['router'];
 
 class App
 {
 
     private plugins: LaravelMuiAdminPlugin[] = [];
+    private config?: AppConfiguration;
+    private macros: () => void = () => void 0;
+    private routeLoader: () => RouteObject[] = () => [];
+
+    get router(): Router
+    {
+        return createBrowserRouter(this.routeLoader());
+    }
+
+    get theme(): Theme
+    {
+        return createTheme(this.config?.theme || {});
+    }
 
     public runPlugins(): void
     {
@@ -27,15 +45,36 @@ class App
         return this;
     }
 
-    public async init(config: AppConfiguration): Promise<App>
+    public withConfig(config: AppConfiguration): App
+    {
+        this.config = config;
+
+        return this;
+    }
+
+    public withMacros(macros: () => void): App
+    {
+        this.macros = macros;
+
+        return this;
+    }
+
+    public withRoutes(routeLoader: () => RouteObject[]): App
+    {
+        this.routeLoader = routeLoader;
+
+        return this;
+    }
+
+    public async init(): Promise<App>
     {
 
         const { data } = await axios.get('/api/admin/init');
 
         registerConfig({
-            ...config,
+            ...this.config,
             boot: {
-                ...config.boot,
+                ...this.config?.boot,
                 ...data,
             },
         });
@@ -51,6 +90,12 @@ class App
         axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
         axios.defaults.withCredentials = true;
+
+        runCoreMacros();
+
+        this.runPlugins();
+
+        this.macros();
 
         return this;
     }

@@ -1,9 +1,7 @@
-import macros from './internals/singletons/MacroService';
+import macros from './singletons/MacroService';
 
-import repositoryIndexFilters from './macros/repositoryIndex/filters';
-import repositoryIndexActions from './macros/repositoryIndex/actions';
-
-import app from './internals/singletons/App';
+import repositoryIndexFilters from '../macros/repositoryIndex/filters';
+import repositoryIndexActions from '../macros/repositoryIndex/actions';
 
 export default () => {
     // Add trashed tab to index page
@@ -70,7 +68,5 @@ export default () => {
         'repository_index_export_items',
         repositoryIndexActions.exportItems,
     );
-
-    app.runPlugins();
 };
 
