@@ -22,13 +22,13 @@ const FormField = ({ form, field, wrapper: WrapperComponent }: FormFieldProps & 
 
     const filteredFieldTypeMapping = useApplyFilters('form_field_type_mapping', fieldTypeMapping);
 
-    const FormField = React.useMemo(() => {
+    const RenderedField = React.useMemo(() => {
         return filteredFieldTypeMapping[type] || TextField;
     }, [type]);
 
     return (
         <WrapperComponent {...gridItem}>
-            <FormField
+            <RenderedField
                 form={form}
                 field={field}
             />
