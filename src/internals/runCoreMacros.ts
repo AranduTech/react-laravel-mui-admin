@@ -68,5 +68,11 @@ export default () => {
         'repository_index_export_items',
         repositoryIndexActions.exportItems,
     );
+
+    macros.addFilter(
+        'model_user_call_hasRole',
+        repositoryIndexFilters.userCallHasRoleMethod,
+        5
+    );
 };
 

@@ -10,6 +10,7 @@ import { ReactNode } from 'react';
 import app from '../../app';
 import config from '../../config';
 import { FormFieldDefinition } from '../../types/form';
+import macros from './MacroService';
 
 /**
  * Class ModelRepository.
@@ -152,14 +153,17 @@ export class ModelRepository {
                             }
                             return target[prop];
                         }
-                        if (Object.keys(target.attributes).includes(prop)) {
-                            return target.attributes[prop];
-                        }
                         if (Object.keys(target.relations).includes(prop)) {
                             return target.relations[prop];
                         }
                         if (typeof target[prop] === 'function') {
                             return target[prop].bind(target);
+                        }
+                        if (macros.hasFilter(`model_${className}_call_${prop}`)) {
+                            return macros.applyFilters(`model_${className}_call_${prop}`, () => null, target);
+                        }
+                        if (Object.keys(target.attributes).includes(prop)) {
+                            return macros.applyFilters(`model_${className}_get_${prop}_attribute`, target.attributes[prop], target);
                         }
                         return target[prop];
                     },

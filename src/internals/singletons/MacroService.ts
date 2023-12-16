@@ -95,8 +95,19 @@ class MacroService {
      *
      * @return {Array} - Filtros registrados.
      */
-    getFilters(): Array<any> {
+    getFilters(filter?: string): Array<any> {
+        if (filter) {
+            return this.#filters.filter((item) => item.filter === filter);
+        }
         return this.#filters;
+    }
+
+    hasFilter(filter: string): boolean {
+        return this.#filters.some((item) => item.filter === filter);
+    }
+
+    hasAction(action: string): boolean {
+        return this.#actions.some((item) => item.action === action);
     }
 
 }

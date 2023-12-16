@@ -115,6 +115,8 @@ const RepositoryIndex = () => {
         className,
     );
 
+    const schema = useApplyFilters(`repository_form_${className}_schema`, 'default');
+
     const handleSplitButtonClick = (callback: () => void,) => {
         callback();
     };
@@ -343,6 +345,7 @@ const RepositoryIndex = () => {
             >
                 <AsyncModelForm
                     model={Model}
+                    schema={schema}
                     id={parseInt(searchParams.get('id') as string, 10)}
                     spacing={2}
                     onSuccess={() => handleDrawer('common.saved')}

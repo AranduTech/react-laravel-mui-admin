@@ -8,6 +8,7 @@ import { LaravelMuiAdminPlugin } from "../../types/plugin";
 import { RouteObject, RouterProviderProps, createBrowserRouter } from "react-router-dom";
 import runCoreMacros from "../runCoreMacros";
 import { Theme, createTheme } from "@mui/material";
+import macros from "./MacroService";
 
 type Router = RouterProviderProps['router'];
 
@@ -26,7 +27,9 @@ class App
 
     get theme(): Theme
     {
-        return createTheme(this.config?.theme || {});
+        const args = macros.applyFilters('app_create_theme_args', []);
+
+        return createTheme(this.config?.theme || {}, ...args);
     }
 
     public runPlugins(): void

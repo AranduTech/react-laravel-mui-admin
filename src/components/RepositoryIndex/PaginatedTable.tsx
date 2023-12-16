@@ -223,14 +223,14 @@ const PaginatedTable = ({
                                         component="form"
                                         direction="row"
                                         spacing={2}
+                                        autoComplete="off"
                                         {...searchFormProps()}
                                     >
                                         <TextField
                                             fullWidth={!isFull}
-                                            type="search"
+                                            autoComplete="new-password"
                                             label={t('common.search')}
                                             size="small"
-                                            autoComplete="off"
                                             InputProps={{
                                                 endAdornment: (
                                                     <IconButton
@@ -248,7 +248,6 @@ const PaginatedTable = ({
                                                 return e.target.value;
                                             })}
                                         />
-
                                     </Stack>
                                     <Stack
                                         direction="row"
