@@ -230,6 +230,7 @@ const PaginatedTable = ({
                                             type="search"
                                             label={t('common.search')}
                                             size="small"
+                                            autoComplete="off"
                                             InputProps={{
                                                 endAdornment: (
                                                     <IconButton

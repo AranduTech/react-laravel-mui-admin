@@ -10,7 +10,7 @@ import {
     UseFormOptions,
     UseFormTools
 } from './types/form';
-import { SelectChangeEvent } from '@mui/material';
+import { AutocompleteRenderInputParams, SelectChangeEvent } from '@mui/material';
 
 const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'number', 'boolean'].includes(typeof value)
     || value === null
@@ -37,9 +37,10 @@ const getAutocompleteProps = ({
             setProp(key, value);
         },
         isOptionEqualToValue: (option: any, value: any) => (option.value || option.id) === (value.value || value.id),
-        renderInput: (params: TextFieldProps) => (
+        renderInput: ({ InputLabelProps: { contentEditable, ...InputLabelProps }, ...params }: AutocompleteRenderInputParams) => (
             <TextField
                 {...params}
+                InputLabelProps={InputLabelProps}
                 name={key}
                 error={errors.some((error) => error.key === key)}
                 helperText={errors.find((error) => error.key === key)?.message}
