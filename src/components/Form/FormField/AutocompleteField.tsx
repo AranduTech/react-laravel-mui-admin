@@ -14,7 +14,7 @@ import { LaravelPaginatedResponse } from '../../../types/laravel';
 const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const {
         label, name, labeledBy = 'name', options: initialOptions, list,
-        cached = true, debounce = 1000, _meta: { model, schema } = {},
+        cached = true, debounce = 800, _meta: { model, schema } = {},
         reducedColumns = true, usesData = [],
         // eslint-disable-next-line no-unused-vars
         initialValue, gridItem, rows, multiple = false,
@@ -37,9 +37,9 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const { t } = useTranslation();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const throttledRequest = React.useCallback(_.throttle((list, inputText, name, cached, model, schema) => {
+    const debouncedRequest = React.useCallback(_.debounce((_list, _inputText, _name, _cached, _model, _schema) => {
         const handleRequestResponse = (response: AxiosResponse<LaravelPaginatedResponse>) => {
-            if (cached) {
+            if (_cached) {
                 setOptions((options) => [
                     ...options,
                     ...response.data.data.filter((option) => !options.some((o) => o.id === option.id)),
@@ -49,59 +49,75 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
             setOptions(response.data.data);
         };
 
-        if (typeof list !== 'undefined') {
+        if (typeof _list !== 'undefined') {
             setLoading(true);
             const search = new URLSearchParams();
-            search.set('q', inputText);
+            search.set('q', _inputText);
             if (usesData.length) {
-                search.set('filters', JSON.stringify(usesData.reduce((acc: any, key) => {
+                search.set('filters', JSON.stringify(usesData.reduce((acc: any, key: string) => {
                     acc[key] = data[key];
                     return acc;
                 }, {})))
             }
-            if (typeof list === 'string' && route.exists(`admin.${list}.list`)) {
+            if (typeof _list === 'string' && route.exists(`admin.${_list}.list`)) {
                 search.set('per_page', '30');
                 if (reducedColumns) {
                     search.set('reducedColumns', 'true');
                 }
                 if (usesData.length) {
-                    search.set('filters', JSON.stringify(usesData.reduce((acc: any, key) => {
+                    search.set('filters', JSON.stringify(usesData.reduce((acc: any, key: string) => {
                         acc[key] = data[key];
                         return acc;
                     }, {})))
                 }
-                axios(`${route(`admin.${list}.list`)}?${search.toString()}`)
+                axios(`${route(`admin.${_list}.list`)}?${search.toString()}`)
                     .then(handleRequestResponse)
                     .finally(() => setLoading(false));
                 return;
             }
-            search.set('name', name);
-            search.set('model', model);
-            search.set('schema', schema);
+            if (_model && _schema) {
+                search.set('name', _name);
+                search.set('model', _model);
+                search.set('schema', _schema);
 
-            axios(`${route('admin.autocomplete')}?${search.toString()}`)
-                .then(handleRequestResponse)
-                .finally(() => setLoading(false));
+                axios(`${route('admin.autocomplete')}?${search.toString()}`)
+                    .then(handleRequestResponse)
+                    .finally(() => setLoading(false));
+            }
         }
-    }, debounce), [...usesDataDependencies]);
+    }, debounce), [reducedColumns, debounce]);
 
     React.useEffect(() => {
-        throttledRequest(list, inputText, name, cached, model, schema);
-    }, [list, inputText, name, cached, model, schema, throttledRequest, ...usesDataDependencies]);
+        debouncedRequest(list, inputText, name, cached, model, schema);
+        return () => {
+            debouncedRequest.cancel();
+        };
+    }, [list, inputText, name, cached, model, schema, ...usesDataDependencies]);
+
+    const appliedValue = React.useMemo(() => {
+        if (typeof value === 'undefined') {
+            if (multiple) {
+                return [];
+            }
+            return null;
+        }
+        return value;
+    }, [value, multiple]);
 
     return (
         <Autocomplete
             fullWidth
             {...props}
             {...autocompleteProps}
-            value={typeof value === 'undefined'
-                ? (multiple ? [] : null)
-                : value}
+            value={appliedValue}
             multiple={multiple}
             getOptionLabel={(option) => dotExists(option, labeledBy)
                 ? dotAccessor(option, labeledBy)
                 : JSON.stringify(option)}
-            onInputChange={(event, newInputValue) => setInputText(newInputValue)}
+            onInputChange={(event, newInputValue) => {
+                console.log('got new input value ', { newInputValue, value: appliedValue });
+                setInputText(newInputValue)
+            }}
             inputValue={inputText}
             options={options}
             loading={loading}
