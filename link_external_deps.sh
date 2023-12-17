@@ -25,6 +25,7 @@ declare -a dependencies=("axios"
                          "react-i18next"
                          "react-router-dom"
                          "uuid"
+                         "deep-object-diff"
                          "@babel"
                          "@mui"
                          "@emotion")
