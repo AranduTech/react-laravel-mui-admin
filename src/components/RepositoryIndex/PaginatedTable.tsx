@@ -122,7 +122,7 @@ const PaginatedTable = ({
             handleApplyFilters(payload);
             handleFilterClose();
         },
-        debug: true,
+        // debug: true,
     });
 
     const { 

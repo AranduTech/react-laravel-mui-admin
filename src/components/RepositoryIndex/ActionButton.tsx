@@ -36,6 +36,12 @@ const ActionButton = ({ item }: ActionButtonProps) => {
         item,
     );
 
+    const specificItemActions = useApplyFilters(
+        `repository_index_model_${item.className}_actions`,
+        itemActions,
+        item,
+    );
+
     return (
         <>
             <IconButton onClick={handleClick}>
@@ -48,7 +54,7 @@ const ActionButton = ({ item }: ActionButtonProps) => {
                 onClose={handleClose}
                 MenuListProps={{ 'aria-labelledby': 'basic-button' }}
             >
-                {itemActions.map((action: ActionItem) => (
+                {specificItemActions.map((action: ActionItem) => (
                     <MenuItem
                         key={action.name}
                         onClick={() => {

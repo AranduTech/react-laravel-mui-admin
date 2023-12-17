@@ -76,6 +76,16 @@ const RepositoryIndex = () => {
 
     const { t } = useTranslation();
 
+    const filterFields = useApplyFilters(
+        `repository_index_${className}_filter_fields`,
+        defaultTable.filter,
+    );
+
+    const tableColumns = useApplyFilters(
+        `repository_index_${className}_table_columns`,
+        defaultTable.columns,
+    );
+
     const {
         items, pagination,
         refresh, setPage, setTab, setPerPage, setSearch, setFilters, setOrderBy,
@@ -85,24 +95,34 @@ const RepositoryIndex = () => {
 
     const doRefresh = useAddAction('repository_index_refresh', refresh);
 
-    const modelTabs: ModelTab[] = useApplyFilters(
+    const preModelTabs = useApplyFilters(
         'repository_index_tabs',
         [],
         className,
     );
 
-    const modelMassActions = useApplyFilters(
+    const modelTabs: ModelTab[] = useApplyFilters(
+        `repository_index_${className}_tabs`,
+        preModelTabs,
+    );
+
+    const preModelMassActions = useApplyFilters(
         'repository_index_get_mass_actions',
         [],
         className,
         tab,
     );
 
+    const modelMassActions = useApplyFilters(
+        `repository_index_${className}_tab_${tab}_mass_actions`,
+        preModelMassActions,
+    );
+
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    const options: ModelActions[] = useApplyFilters(
+    const preOptions = useApplyFilters(
         'repository_index_model_actions',
         [{
             label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
@@ -113,6 +133,11 @@ const RepositoryIndex = () => {
             )
         }],
         className,
+    );
+
+    const options: ModelActions[] = useApplyFilters(
+        `repository_index_${className}_actions`,
+        preOptions,
     );
 
     const schema = useApplyFilters(`repository_form_${className}_schema`, 'default');
@@ -322,8 +347,8 @@ const RepositoryIndex = () => {
             </Grid>
             <PaginatedTable
                 items={items}
-                columns={defaultTable.columns}
-                filter={defaultTable.filter}
+                columns={tableColumns}
+                filter={filterFields}
                 filtersApplied={JSON.parse(filters)}
                 massActions={modelMassActions}
                 orderBy={order_by}

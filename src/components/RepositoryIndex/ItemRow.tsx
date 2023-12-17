@@ -33,12 +33,20 @@ const ItemRow = ({
     const isFull = useMediaQuery(mediaQuery);
 
     const getCellContent = React.useCallback(
-        (item: Model, column: ModelTableColumnDefinition) => applyFilters(
-            'repository_index_item_data',
-            dotAccessor(item, column.key),
-            item,
-            column,
-        ),
+        (item: Model, column: ModelTableColumnDefinition) => {
+            const value = applyFilters(
+                'repository_index_item_data',
+                dotAccessor(item, column.key),
+                item,
+                column,
+            );
+
+            return applyFilters(
+                `repository_index_${item.className}_column_${column.key}_content`,
+                value,
+                item,
+            );
+        },
         [],
     );
 
@@ -71,7 +79,7 @@ const ItemRow = ({
             {isFull && columns.map((column) => {
                 const rawContent = getCellContent(item, column);
 
-                const content = typeof rawContent === 'string'
+                const content = ['string', 'number'].includes(typeof rawContent)
                     ? <Typography>{rawContent}</Typography>
                     : rawContent;
 
@@ -92,9 +100,13 @@ const ItemRow = ({
                     {columns.map((column) => {
                         const rawContent = getCellContent(item, column);
 
-                        const content = typeof rawContent === 'string'
+                        const content = ['string', 'number'].includes(typeof rawContent)
                             ? <Typography><b>{column.label}:</b> {rawContent}</Typography>
-                            : rawContent;
+                            : (
+                                <>
+                                    <Typography sx={{ display: 'inline' }}><b>{column.label}:</b></Typography>{' '}{rawContent}
+                                </>
+                            );
 
                         return (
                             <React.Fragment key={column.key}>
