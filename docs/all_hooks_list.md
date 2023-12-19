@@ -4,7 +4,7 @@
 `form_field_type_mapping`
 `model_${className}_call_${method}`
 `model_${className}_get_${attribute}_attribute`
-`model_form_options_${item.className}_${schema}`
+`model_form_options_${className}_${schema}`
 `repository_form_${className}_schema`
 `repository_index_${className}_actions`
 `repository_index_${className}_column_${columnKey}_content`
@@ -15,7 +15,7 @@
 `repository_index_get_item_actions`
 `repository_index_get_mass_actions`
 `repository_index_item_data`
-`repository_index_model_${item.className}_actions`
+`repository_index_model_${className}_actions`
 `repository_index_model_actions`
 `repository_index_rows_per_page_options`
 `repository_index_tabs`
