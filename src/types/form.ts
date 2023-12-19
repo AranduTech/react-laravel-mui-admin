@@ -28,6 +28,7 @@ export interface FormFieldDefinition {
     accept?: string,
     inputProps?: any,
     usesData?: string[],
+    refreshWhileTyping?: boolean,
 
 }
 

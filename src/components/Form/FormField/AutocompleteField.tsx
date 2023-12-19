@@ -15,7 +15,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const {
         label, name, labeledBy = 'name', options: initialOptions, list,
         cached = true, debounce = 800, _meta: { model, schema } = {},
-        reducedColumns = true, usesData = [],
+        reducedColumns = true, usesData = [], refreshWhileTyping = true,
         // eslint-disable-next-line no-unused-vars
         initialValue, gridItem, rows, multiple = false,
         ...props
@@ -42,7 +42,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const { t } = useTranslation();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedRequest = React.useCallback(_.debounce((_list, _inputText, _name, _cached, _model, _schema) => {
+    const debouncedRequest = React.useCallback(_.debounce((_list, _name, _cached, _model, _schema) => {
         const handleRequestResponse = (response: AxiosResponse<LaravelPaginatedResponse>) => {
             if (_cached) {
                 setOptions((options) => [
@@ -57,7 +57,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         if (typeof _list !== 'undefined') {
             setLoading(true);
             const search = new URLSearchParams();
-            search.set('q', _inputText);
+            search.set('q', inputText);
             if (usesData.length) {
                 search.set('filters', JSON.stringify(usesData.reduce((acc: any, key: string) => {
                     acc[key] = data[key];
@@ -90,14 +90,14 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                     .finally(() => setLoading(false));
             }
         }
-    }, debounce), [reducedColumns, usesData, data, debounce]);
+    }, debounce), [reducedColumns, inputText, usesData, data, debounce]);
 
     React.useEffect(() => {
-        debouncedRequest(list, inputText, name, cached, model, schema);
+        debouncedRequest(list, name, cached, model, schema);
         return () => {
             debouncedRequest.cancel();
         };
-    }, [list, inputText, name, cached, model, schema, ...usesDataDependencies]);
+    }, [list, name, cached, model, schema, ...usesDataDependencies, ...(refreshWhileTyping ? [inputText] : [])]);
 
     const appliedValue = React.useMemo(() => {
         if (typeof value === 'undefined') {
