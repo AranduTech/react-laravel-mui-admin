@@ -23,7 +23,12 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
 
     const { state: [data], autocompleteProps: autocompletePropsFn } = form;
 
-    const usesDataDependencies = usesData.map((useData) => data[useData]);
+    const usesDataDependencies = usesData.map((useData) => {
+        if (typeof data[useData] === 'object' && !!data[useData] && (data[useData] as any).id) {
+            return (data[useData] as any).id;
+        }
+        return data[useData];
+    });
 
     const { value, ...autocompleteProps } = React.useMemo(
         () => autocompletePropsFn(name, { textFieldProps: { label: label || name } }),
@@ -85,7 +90,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                     .finally(() => setLoading(false));
             }
         }
-    }, debounce), [reducedColumns, debounce]);
+    }, debounce), [reducedColumns, usesData, data, debounce]);
 
     React.useEffect(() => {
         debouncedRequest(list, inputText, name, cached, model, schema);
