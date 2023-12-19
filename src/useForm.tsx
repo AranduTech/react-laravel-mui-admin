@@ -36,7 +36,7 @@ const getAutocompleteProps = ({
         onChange: (_: any, value: any) => {
             setProp(key, value);
         },
-        isOptionEqualToValue: (option: any, value: any) => (option.value || option.id) === (value.value || value.id),
+        // isOptionEqualToValue: (option: any, value: any) => (option.value || option.id) === (value.value || value.id),
         renderInput: ({ InputLabelProps: { contentEditable, ...InputLabelProps }, ...params }: AutocompleteRenderInputParams) => (
             <TextField
                 {...params}

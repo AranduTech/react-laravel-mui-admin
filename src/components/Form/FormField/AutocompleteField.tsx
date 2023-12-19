@@ -16,6 +16,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         label, name, labeledBy = 'name', options: initialOptions, list,
         cached = true, debounce = 800, _meta: { model, schema } = {},
         reducedColumns = true, usesData = [], refreshWhileTyping = true,
+        valuedBy = 'id',
         // eslint-disable-next-line no-unused-vars
         initialValue, gridItem, rows, multiple = false,
         ...props
@@ -42,7 +43,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     const { t } = useTranslation();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedRequest = React.useCallback(_.debounce((_list, _name, _cached, _model, _schema) => {
+    const debouncedRequest = React.useCallback(_.debounce((_name, _cached, _model, _schema) => {
         const handleRequestResponse = (response: AxiosResponse<LaravelPaginatedResponse>) => {
             if (_cached) {
                 setOptions((options) => [
@@ -54,7 +55,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
             setOptions(response.data.data);
         };
 
-        if (typeof _list !== 'undefined') {
+        if (typeof list !== 'undefined') {
             setLoading(true);
             const search = new URLSearchParams();
             search.set('q', inputText);
@@ -64,7 +65,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                     return acc;
                 }, {})))
             }
-            if (typeof _list === 'string' && route.exists(`admin.${_list}.list`)) {
+            if (typeof list === 'string' && route.exists(`admin.${list}.list`)) {
                 search.set('per_page', '30');
                 if (reducedColumns) {
                     search.set('reducedColumns', 'true');
@@ -75,7 +76,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                         return acc;
                     }, {})))
                 }
-                axios(`${route(`admin.${_list}.list`)}?${search.toString()}`)
+                axios(`${route(`admin.${list}.list`)}?${search.toString()}`)
                     .then(handleRequestResponse)
                     .finally(() => setLoading(false));
                 return;
@@ -90,14 +91,16 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                     .finally(() => setLoading(false));
             }
         }
-    }, debounce), [reducedColumns, inputText, usesData, data, debounce]);
+    }, debounce), [reducedColumns, list, inputText, usesData, data, debounce]);
 
     React.useEffect(() => {
-        debouncedRequest(list, name, cached, model, schema);
+        debouncedRequest(name, cached, model, schema);
         return () => {
             debouncedRequest.cancel();
         };
-    }, [list, name, cached, model, schema, ...usesDataDependencies, ...(refreshWhileTyping ? [inputText] : [])]);
+    }, [name, cached, model, schema, ...usesDataDependencies, ...(refreshWhileTyping ? [inputText] : [])]);
+
+    console.log(`dependencies for field ${name}`, { usesDataDependencies, refreshWhileTyping, inputText });
 
     const appliedValue = React.useMemo(() => {
         if (typeof value === 'undefined') {
@@ -123,6 +126,7 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
                 console.log('got new input value ', { newInputValue, value: appliedValue });
                 setInputText(newInputValue)
             }}
+            isOptionEqualToValue={(option, value) => option[valuedBy] === value[valuedBy]}
             inputValue={inputText}
             options={options}
             loading={loading}

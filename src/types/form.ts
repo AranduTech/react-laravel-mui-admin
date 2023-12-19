@@ -17,6 +17,7 @@ export interface FormFieldDefinition {
     multiple?: boolean,
     rows?: number,
     labeledBy?: string,
+    valuedBy?: string,
     cached?: boolean,
     debounce?: number,
     _meta?: {
@@ -93,7 +94,7 @@ export interface AutocompleteProps<T> {
     name: string;
     value: T | T[];
     onChange: ((event: React.SyntheticEvent<Element, Event>, value: T | T[] | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<T> | undefined) => void);
-    isOptionEqualToValue: (option: object, value: object) => boolean;
+    isOptionEqualToValue?: (option: object, value: object) => boolean;
     renderInput: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
