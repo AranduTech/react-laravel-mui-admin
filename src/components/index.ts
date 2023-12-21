@@ -1,4 +1,5 @@
 import CsrfToken from './CsrfToken';
+import Dashboard from './Dashboard';
 import DialogProvider from './DialogProvider';
 import Icon from './Icon';
 import Link from './Link';
@@ -16,6 +17,7 @@ import ToastProvider from './ToastProvider';
 
 export {
     CsrfToken,
+    Dashboard,
     DialogProvider,
     Icon,
     Link,

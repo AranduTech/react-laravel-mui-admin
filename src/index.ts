@@ -17,6 +17,7 @@ import useAddAction from './useAddAction';
 import useApiRequest from './useApiRequest';
 import useApplyFilters from './useApplyFilters';
 import useClearErrorsOnExit from './useClearErrorsOnExit';
+import useDashboard from './useDashboard';
 import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
@@ -46,12 +47,14 @@ export {
     useApiRequest,
     useApplyFilters,
     useClearErrorsOnExit,
+    useDashboard,
     useFetchItem,
     useFetchList,
     useForm,
 }
 
 export const CsrfToken = components.CsrfToken;
+export const Dashboard = components.Dashboard;
 export const DialogProvider = components.DialogProvider;
 export const Icon = components.Icon;
 export const Link = components.Link;
