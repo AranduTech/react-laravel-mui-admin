@@ -113,9 +113,14 @@ export interface SideMenuLayoutProps {
     navMenuItems: MenuItem[];
     bottomMenuItems?: MenuItem[];
     children: React.ReactNode;
+    title?: string;
+    endOfToolbarContent?: React.ReactNode;
 }
 
-const SideMenuLayout = ({ navMenuItems, bottomMenuItems, children }: SideMenuLayoutProps) => {
+const SideMenuLayout = ({ 
+    navMenuItems, bottomMenuItems, children, title = document.title,
+    endOfToolbarContent,
+}: SideMenuLayoutProps) => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
@@ -161,14 +166,22 @@ const SideMenuLayout = ({ navMenuItems, bottomMenuItems, children }: SideMenuLay
                         </IconButton>
                     )}
 
-                    <Typography
-                        width="100%"
-                        variant="h6"
-                        noWrap
-                        component="div"
-                    >
-                        {document.title}
-                    </Typography>
+                    {typeof title === 'string' 
+                        ? (
+                            <Typography
+                                width="100%"
+                                variant="h6"
+                                noWrap
+                                component="div"
+                            >
+                                {document.title}
+                            </Typography>
+                        )
+                        : title}
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                            {endOfToolbarContent}
+                        </Box>
                 </Toolbar>
             </AppBarComponent>
             <DrawerComponent
