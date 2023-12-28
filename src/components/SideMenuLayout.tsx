@@ -23,6 +23,7 @@ import { MenuItem } from '../types/menu';
 import route from '../route';
 import app from '../app';
 import config from '../config';
+import useApplyFilters from '../useApplyFilters';
 
 const drawerWidth = 280;
 
@@ -147,6 +148,83 @@ const SideMenuLayout = ({
         ? Drawer
         : MuiDrawer, [isTablet]);
 
+
+
+    const drawerHeaderContent = useApplyFilters(
+        'side_menu_layout_drawer_header_content',
+        <Button
+            component={Link}
+            to={route('profile')}
+            sx={{ pr: 2 }}
+            onClick={() => !isTablet && setOpen(false)}
+        >
+            <Avatar
+                alt={userName}
+                src=""
+                sx={{ margin: '0 10px 0 0' }}
+            >
+                {userName?.charAt(0)}
+            </Avatar>
+            <Typography
+                variant="body2"
+                sx={{ margin: 'auto' }}
+            >
+                {userName.split(' ')[0]}
+            </Typography>
+        </Button>,
+        { DrawerHeader, userName, isTablet, setOpen, handleDrawerClose, theme },
+    );
+
+    const drawerSidebarContent = useApplyFilters(
+        'side_menu_layout_drawer_sidebar_content',
+        <RecursiveList
+            collapsed={!open && isTablet}
+            items={navMenuItems}
+            onClick={() => !isTablet && setOpen(false)}
+        />,
+        { open, isTablet, setOpen, navMenuItems },
+    );
+
+    const drawer = useApplyFilters(
+        'side_menu_layout_drawer',
+        <DrawerComponent
+            variant={isTablet ? 'permanent' : 'temporary'}
+            open={open}
+            onClose={() => setOpen(false)}
+            PaperProps={{ sx: { width: drawerWidth } }}
+            sx={{
+                display: 'flex',
+                direction: 'flex-column',
+                flexWrap: 'nowrap',
+                height: '100%',
+            }}
+        >
+            <DrawerHeader sx={{ flexShrink: 0 }}>
+                {drawerHeaderContent}
+                <IconButton onClick={handleDrawerClose}>
+                    {theme.direction === 'rtl'
+                        ? <Icon name="chevronRight" />
+                        : <Icon name="chevronLeft" />}
+                </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+                {!blockUi && drawerSidebarContent}
+            </Box>
+            {bottomMenuItems && (
+                <DrawerFooter open={open}>
+                    <RecursiveList
+                        collapsed={!open && isTablet}
+                        items={bottomMenuItems}
+                        sx={{ pt: 0 }}
+                    />
+                </DrawerFooter>
+            )}
+
+        </DrawerComponent>,
+        { DrawerComponent, DrawerHeader, drawerHeaderContent, drawerSidebarContent, blockUi, bottomMenuItems, open, isTablet, setOpen, handleDrawerClose, theme },
+    );
+
     return (
         <Box sx={{ display: 'flex' }}>
             {/* <CssBaseline /> */}
@@ -155,7 +233,7 @@ const SideMenuLayout = ({
                 open={open}
             >
                 <Toolbar>
-                    {(!isTablet || !open) && (
+                    {(!isTablet || !open) && drawer && (
                         <IconButton
                             color="inherit"
                             onClick={handleDrawerOpen}
@@ -178,74 +256,13 @@ const SideMenuLayout = ({
                             </Typography>
                         )
                         : title}
-                        <Box sx={{ flexGrow: 1 }} />
-                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            {endOfToolbarContent}
-                        </Box>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Box sx={{ display: 'flex' }}>
+                        {endOfToolbarContent}
+                    </Box>
                 </Toolbar>
             </AppBarComponent>
-            <DrawerComponent
-                variant={isTablet ? 'permanent' : 'temporary'}
-                open={open}
-                onClose={() => setOpen(false)}
-                PaperProps={{ sx: { width: drawerWidth } }}
-                sx={{
-                    display: 'flex',
-                    direction: 'flex-column',
-                    flexWrap: 'nowrap',
-                    height: '100%',
-                }}
-            >
-                <DrawerHeader sx={{ flexShrink: 0 }}>
-                    <Button
-                        component={Link}
-                        to={route('profile')}
-                        sx={{ pr: 2 }}
-                        onClick={() => !isTablet && setOpen(false)}
-                    >
-                        <Avatar
-                            alt={userName}
-                            src=""
-                            sx={{ margin: '0 10px 0 0' }}
-                        >
-                            {userName?.charAt(0)}
-                        </Avatar>
-                        <Typography
-                            variant="body2"
-                            sx={{ margin: 'auto' }}
-                        >
-                            {userName.split(' ')[0]}
-                        </Typography>
-
-                    </Button>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl'
-                            ? <Icon name="chevronRight" />
-                            : <Icon name="chevronLeft" />}
-                    </IconButton>
-                </DrawerHeader>
-                <Divider />
-                <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
-                    {!blockUi && (
-                        <RecursiveList
-                            collapsed={!open && isTablet}
-                            items={navMenuItems}
-                            onClick={() => !isTablet && setOpen(false)}
-                        />
-                    )}
-                </Box>
-
-                {bottomMenuItems && (
-                    <DrawerFooter open={open}>
-                        <RecursiveList
-                            collapsed={!open && isTablet}
-                            items={bottomMenuItems}
-                            sx={{ pt: 0 }}
-                        />
-                    </DrawerFooter>
-                )}
-
-            </DrawerComponent>
+            {drawer}
             <Box
                 component="main"
                 sx={{

@@ -19,6 +19,8 @@
 `repository_index_model_actions`
 `repository_index_rows_per_page_options`
 `repository_index_tabs`
+`side_menu_layout_drawer_header_content`
+`side_menu_layout_drawer_sidebar_content`
 
 # Actions
 

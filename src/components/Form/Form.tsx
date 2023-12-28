@@ -1,11 +1,18 @@
 import React from 'react';
 
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
+import Button, { ButtonPropsColorOverrides } from '@mui/material/Button';
 import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+
+import { OverridableStringUnion } from '@mui/types';
 
 import FormField from './FormField';
 import { FormFieldDefinition, UseFormTools } from '../../types/form';
+
+type ButtonColor = OverridableStringUnion<
+    'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
+    ButtonPropsColorOverrides
+>;
 
 export interface BaseFormProps {
     component?: React.ElementType;
@@ -15,6 +22,9 @@ export interface BaseFormProps {
     onCancel?: () => void;
     showCancelButton?: boolean;
     showSubmitButton?: boolean;
+    buttonProps?: React.ComponentProps<typeof Button>;
+    submitButtonColor?: ButtonColor;
+    cancelButtonColor?: ButtonColor; 
     alert?: string;
     alertSeverity?: 'error' | 'warning' | 'info' | 'success';
     as?: React.ElementType;
@@ -30,7 +40,7 @@ const Form = ({
     form, fields, component: Component = Grid, fieldWrapperComponent: FieldWrapperComponent = Grid,
     submitText = 'Submit', cancelText = 'Cancel', onCancel = () => null,
     showCancelButton = false, showSubmitButton = true, alert, alertSeverity = 'error',
-    as = 'form',
+    as = 'form', submitButtonColor = 'primary', cancelButtonColor = 'error', buttonProps = {},
     ...props
 }: FormProps) => {
     const { formProps, errors } = form;
@@ -70,22 +80,24 @@ const Form = ({
             )}
             <FieldWrapperComponent
                 xs={12}
-                sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 1 }}
             >
                 {showCancelButton && (
                     <Button
+                        {...buttonProps}
                         variant="outlined"
                         onClick={onCancel}
-                        sx={{ mt: 1 }}
+                        color={cancelButtonColor}
                     >
                         {cancelText}
                     </Button>
                 )}
                 {showSubmitButton && (
                     <Button
+                        {...buttonProps}
                         type="submit"
                         variant="contained"
-                        sx={{ mt: 1 }}
+                        color={submitButtonColor}
                     >
                         {submitText}
                     </Button>
