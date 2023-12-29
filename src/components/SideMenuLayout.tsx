@@ -3,7 +3,7 @@ import React from 'react';
 import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 
 import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MuiDrawer, { DrawerProps as MuiDrawerProps } from '@mui/material/Drawer';
@@ -114,13 +114,14 @@ export interface SideMenuLayoutProps {
     navMenuItems: MenuItem[];
     bottomMenuItems?: MenuItem[];
     children: React.ReactNode;
-    title?: string;
+    title?: string|React.ReactNode;
     endOfToolbarContent?: React.ReactNode;
+    mainProps?: BoxProps;
 }
 
 const SideMenuLayout = ({ 
     navMenuItems, bottomMenuItems, children, title = document.title,
-    endOfToolbarContent,
+    endOfToolbarContent, mainProps = {},
 }: SideMenuLayoutProps) => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -149,6 +150,18 @@ const SideMenuLayout = ({
         : MuiDrawer, [isTablet]);
 
 
+    const menuButton = useApplyFilters(
+        'side_menu_layout_menu_button',
+        <IconButton
+            color="inherit"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{ mr: { md: 2 } }}
+        >
+            <Icon name="menu" />
+        </IconButton>,
+        { handleDrawerOpen, open, isTablet },
+    );
 
     const drawerHeaderContent = useApplyFilters(
         'side_menu_layout_drawer_header_content',
@@ -222,8 +235,10 @@ const SideMenuLayout = ({
             )}
 
         </DrawerComponent>,
-        { DrawerComponent, DrawerHeader, drawerHeaderContent, drawerSidebarContent, blockUi, bottomMenuItems, open, isTablet, setOpen, handleDrawerClose, theme },
+        { DrawerComponent, DrawerHeader, drawerHeaderContent, drawerSidebarContent, blockUi, bottomMenuItems, open, isTablet, setOpen, handleDrawerClose, theme, drawerWidth },
     );
+
+    const { sx: mainSx = {}, ...MainProps } = mainProps;
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -233,17 +248,7 @@ const SideMenuLayout = ({
                 open={open}
             >
                 <Toolbar>
-                    {(!isTablet || !open) && drawer && (
-                        <IconButton
-                            color="inherit"
-                            onClick={handleDrawerOpen}
-                            edge="start"
-                            sx={{ mr: { md: 2 } }}
-                        >
-                            <Icon name="menu" />
-                        </IconButton>
-                    )}
-
+                    {(!isTablet || !open) && drawer && menuButton}
                     {typeof title === 'string' 
                         ? (
                             <Typography
@@ -268,7 +273,9 @@ const SideMenuLayout = ({
                 sx={{
                     flexGrow: 1,
                     p: { xs: 1, sm: 2, md: 3 },
+                    ...mainSx
                 }}
+                {...MainProps}
             >
                 <DrawerHeader />
                 {children}

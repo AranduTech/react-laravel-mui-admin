@@ -228,7 +228,7 @@ const PaginatedTable = ({
                                     >
                                         <TextField
                                             fullWidth={!isFull}
-                                            autoComplete="new-password"
+                                            // autoComplete="new-password"
                                             label={t('common.search')}
                                             size="small"
                                             InputProps={{
