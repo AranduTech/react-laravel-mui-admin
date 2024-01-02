@@ -21,6 +21,8 @@ import useDashboard from './useDashboard';
 import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
+import useModel from './useModel';
+import useModels from './useModels';
 
 import * as components from './components';
 
@@ -51,6 +53,8 @@ export {
     useFetchItem,
     useFetchList,
     useForm,
+    useModel,
+    useModels,
 }
 
 export const CsrfToken = components.CsrfToken;
