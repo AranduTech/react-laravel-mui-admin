@@ -12,7 +12,19 @@ export type DashboardProps = {
 
 const Dashboard = ({ name, debug = false, ...props }: DashboardProps) => {
 
-    const { dashboard, widgets } = useDashboard(name, { debug });
+    const { dashboard, widgets, error } = useDashboard(name, { debug });
+    
+    if (error) {
+        console.error(error);
+
+        return (
+            <Grid container spacing={2} {...props}>
+                <Grid xs={12}>
+                    {`error: ${error}`}
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <Grid container spacing={2} {...props}>
