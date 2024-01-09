@@ -24,7 +24,7 @@ export interface BaseFormProps {
     showSubmitButton?: boolean;
     buttonProps?: React.ComponentProps<typeof Button>;
     submitButtonColor?: ButtonColor;
-    cancelButtonColor?: ButtonColor; 
+    cancelButtonColor?: ButtonColor;
     alert?: string;
     alertSeverity?: 'error' | 'warning' | 'info' | 'success';
     as?: React.ElementType;

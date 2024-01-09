@@ -93,6 +93,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         validate: validateFn = () => [], validateOnInputChange = false, preventDefault = true,
         onChange: onChangeFn = () => null, debug = false, onError: onErrorFn = () => null,
         action, method = 'get', onSuccess: onSuccessFn = () => null,
+        sendFormat = 'application/json',
         transformPayload: transformPayloadFn = (payload) => payload,
         preventStructureChange = false,
     } = options;
@@ -257,6 +258,9 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
                     method,
                     url: action,
                     data: transformPayload(data),
+                    headers: {
+                        'Content-Type': sendFormat,
+                    }
                 });
 
                 onSuccess(response);

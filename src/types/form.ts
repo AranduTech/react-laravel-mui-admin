@@ -153,6 +153,7 @@ export interface UseFormOptions {
     action?: string;
     method?: Method;
     onSuccess?: (response: any) => void;
+    sendFormat?: 'application/json' | 'multipart/form-data';
     transformPayload?: (payload: FormState) => any;
     preventStructureChange?: boolean;
 }

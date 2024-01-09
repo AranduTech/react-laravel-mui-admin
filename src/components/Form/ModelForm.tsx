@@ -38,6 +38,7 @@ export interface BaseModelFormProps extends BaseFormProps {
     onChange?: (form: FormState) => void;
     onError?: (error: any) => void;
     onSubmit?: (form: FormState) => Promise<void>;
+    sendFormat?: 'application/json' | 'multipart/form-data';
 }
 
 export interface ModelFormProps extends BaseModelFormProps {
@@ -49,8 +50,10 @@ export interface ModelFormProps extends BaseModelFormProps {
  *
  */
 const ModelForm = ({
-    item, schema = 'default', debug = false, onSuccess = () => null, onChange = () => null,
-    onError = () => null, onSubmit,
+    item, schema = 'default', debug = false, 
+    onSubmit, onChange = () => null,
+    onSuccess = () => null, onError = () => null, 
+    sendFormat = 'application/json',
     ...props
 }: ModelFormProps) => {
     const fields = React.useMemo(
@@ -85,6 +88,7 @@ const ModelForm = ({
         onError,
         onSubmit,
         onChange,
+        sendFormat,
         transformPayload: (payload: any) => ({
             ...payload,
             _type: schema,
