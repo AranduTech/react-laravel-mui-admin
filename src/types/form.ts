@@ -129,6 +129,7 @@ export interface UseFormTools {
     fileFieldProps: FileFieldPropsCallback;
     selectFieldProps: TextFieldPropsCallback<SelectChangeEvent, string>;
     autocompleteProps: AutocompletePropsCallback<any>;
+    setProp: SetPropCallback;
     errors: FormError[];
     state: [FormState, React.Dispatch<React.SetStateAction<FormState>>];
     isSubmitting: boolean;

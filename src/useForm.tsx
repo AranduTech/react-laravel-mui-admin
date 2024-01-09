@@ -337,6 +337,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         fileFieldProps,
         selectFieldProps,
         autocompleteProps,
+        setProp,
         submit,
         isSubmitting,
     };
