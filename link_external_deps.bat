@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Usage: link_external_deps.bat <path_to_consumer_project>
-:: Example: link_external_deps.bat C:\path\to\my-laravel-project
+:: Usage: .\link_external_deps.bat "<path_to_consumer_project>""
+:: Example: .\link_external_deps.bat "C:\path\to\my-laravel-project"
 
 :: To actually link the projects, you need to run this command in the library directory
 :: (where this script is located)
