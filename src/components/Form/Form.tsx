@@ -55,7 +55,6 @@ const Form = ({
             container
             {...props}
         >
-
             {fields.map((field) => (
                 <FormField
                     key={field.name}
@@ -104,7 +103,6 @@ const Form = ({
                 )}
             </FieldWrapperComponent>
         </Component>
-
     );
 };
 

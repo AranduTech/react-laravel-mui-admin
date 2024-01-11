@@ -14,6 +14,7 @@ import Form from './Form/Form';
 import FormField from './Form/FormField';
 import RepositoryIndex from './RepositoryIndex';
 import ToastProvider from './ToastProvider';
+import Widget from './Widgets/Widget';
 
 export {
     CsrfToken,
@@ -32,4 +33,5 @@ export {
     FormField,
     RepositoryIndex,
     ToastProvider,
+    Widget,
 }

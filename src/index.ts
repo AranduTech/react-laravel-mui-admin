@@ -3,6 +3,7 @@ import addFilter from './addFilter';
 import app from './app';
 import applyFilters from './applyFilters';
 import auth from './auth';
+import bi from './bi';
 import config from './config';
 import dialog from './dialog';
 import doAction from './doAction';
@@ -35,6 +36,7 @@ export {
     applyFilters,
     app,
     auth,
+    bi,
     config,
     dialog,
     doAction,
@@ -73,6 +75,7 @@ export const Form = components.Form;
 export const FormField = components.FormField;
 export const RepositoryIndex = components.RepositoryIndex;
 export const ToastProvider = components.ToastProvider;
+export const Widget = components.Widget;
 
 export const macros = {
     actions,
