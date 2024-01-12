@@ -58,6 +58,4 @@ const Dashboard = ({ name, filter, exportable, debug = false, ...props }: Dashbo
     
 };
 
-
 export default Dashboard;
-

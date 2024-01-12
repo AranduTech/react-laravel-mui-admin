@@ -7,7 +7,7 @@ import { FormState } from "./types/form";
 export default () => ({
     download: async (dashboardUri: string, filter?: FormState) => {
         const response = await axios({
-            method: 'post',
+            method: 'GET',
             url: route('admin.bi.export', { dashboard: dashboardUri }),
             data: { filters: filter },
             responseType: 'blob',
