@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import useForm from '../../useForm';
 import modelRepository from '../../internals/singletons/ModelRepository';
 
-import Form, { BaseFormProps, FormProps } from './Form';
+import Form, { BaseFormProps } from './Form';
 
 import { useTranslation } from 'react-i18next';
 import { Model } from '../../types/model';
 import { AxiosResponse } from 'axios';
 import { LaravelItemResponse } from '../../types/laravel';
-import { FormFieldDefinition, FormState, UseFormOptions } from '../../types/form';
+import { FormFieldDefinition, FormState } from '../../types/form';
 import route from '../../route';
 import { RouteReplacer } from '../../types/route';
 import useApplyFilters from '../../useApplyFilters';
@@ -38,7 +38,6 @@ export interface BaseModelFormProps extends BaseFormProps {
     onChange?: (form: FormState) => void;
     onError?: (error: any) => void;
     onSubmit?: (form: FormState) => Promise<void>;
-    sendFormat?: 'application/json' | 'multipart/form-data';
 }
 
 export interface ModelFormProps extends BaseModelFormProps {
@@ -53,7 +52,6 @@ const ModelForm = ({
     item, schema = 'default', debug = false, 
     onSubmit, onChange = () => null,
     onSuccess = () => null, onError = () => null, 
-    sendFormat = 'application/json',
     ...props
 }: ModelFormProps) => {
     const fields = React.useMemo(
@@ -88,7 +86,6 @@ const ModelForm = ({
         onError,
         onSubmit,
         onChange,
-        sendFormat,
         transformPayload: (payload: any) => ({
             ...payload,
             _type: schema,
