@@ -38,6 +38,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.13.5",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.10",
     "deep-object-diff": "^1.1.9",
     "i18next": "^22.5.1",
     "i18next-browser-languagedetector": "^7.0.2",

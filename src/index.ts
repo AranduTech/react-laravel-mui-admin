@@ -25,6 +25,7 @@ import useForm from './useForm';
 import useModel from './useModel';
 import useModels from './useModels';
 
+import * as plugins from './plugins';
 import * as components from './components';
 
 import actions from './macros/repositoryIndex/actions';
@@ -45,6 +46,7 @@ export {
     removeAction,
     removeFilter,
     route,
+    plugins,
     t,
     toast,
     useAddAction,

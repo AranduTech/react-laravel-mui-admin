@@ -2,6 +2,8 @@ import macros from './singletons/MacroService';
 
 import repositoryIndexFilters from '../macros/repositoryIndex/filters';
 import repositoryIndexActions from '../macros/repositoryIndex/actions';
+import config from '../config';
+import { ModelSchema } from '../types/model';
 
 export default () => {
     // Add trashed tab to index page
@@ -74,5 +76,26 @@ export default () => {
         repositoryIndexFilters.userCallHasRoleMethod,
         5
     );
+
+    const modelSchema: ModelSchema = config('boot.models');
+
+    const models = Object.keys(modelSchema);
+
+    // the registration for each model
+    models.forEach((model) => {
+        const schema = modelSchema[model];
+
+        // adding casts
+        const { casts = {} } = schema;
+        Object.entries(casts).forEach(([field, cast]) => {
+            macros.addFilter(
+                `model_${model}_get_${field}_attribute`,
+                repositoryIndexFilters.makeCastAttributeFilter(cast),
+                5
+            );
+        });
+
+
+    });
 };
 
