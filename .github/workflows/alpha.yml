@@ -22,7 +22,7 @@ jobs:
         - uses: paulhatch/semantic-version@v5.2.1
           id: semver
           with:
-            version_format: "${major}.${minor}.${patch}-alpha.${increment}}"
+            version_format: "${major}.${minor}.${patch}-alpha.${increment}"
 
         - name: Build & Tag
           run: |
