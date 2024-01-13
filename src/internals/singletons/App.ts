@@ -34,8 +34,15 @@ class App
 
     public runPlugins(): void
     {
+        const debug = !!this.config?.app?.debug;
+        if (debug) {
+            console.log('Running plugins...');
+        }
         this.plugins.forEach((plugin) => {
             if (plugin.macros) {
+                if (debug) {
+                    console.log('Running plugin', plugin);
+                }
                 plugin.macros();
             }
         });

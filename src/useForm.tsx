@@ -148,6 +148,13 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
                 { formId, data, key, value }
             );
 
+            if (debug) {
+                if (transfer.length > 0) {
+                    // eslint-disable-next-line no-console
+                    console.debug(`[useForm] Transfered data for key ${key}`, transfer);
+                }
+            }
+            
             const newData = structuredClone(data, { transfer });
 
             dotSetter(newData, key, value);
@@ -164,11 +171,12 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
                     prevData: data,
                     nextData: newData,
                 });
+
             }
             onChange(newData);
             return newData;
         });
-    }, [preventStructureChange, initialValues, debug, validateOnInputChange, onChange, validate]);
+    }, [preventStructureChange, initialValues, debug, validateOnInputChange, onChange, validate, formId]);
 
     const autocompleteProps: AutocompletePropsCallback<any> = React.useCallback(
         (key, options) => getAutocompleteProps({

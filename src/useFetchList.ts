@@ -46,7 +46,7 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         tab = 'all',
         filters = '{}',
         order_by = '',
-    } = React.useMemo(() => Object.fromEntries(searchParams.entries()), [searchParams]);
+    } = React.useMemo(() => Object.fromEntries((searchParams as any).entries()), [searchParams]);
 
     const {
         data: responseData,
