@@ -215,8 +215,8 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         [setProp, errors, data],
     );
 
-    const inputProps: InputPropsCallback = React.useCallback(
-        (key, sanitizeFn = (e) => e.target.value) => ({
+    const inputProps: InputPropsCallback<any> = React.useCallback(
+        (key, sanitizeFn = (e) => e?.target?.value) => ({
             name: key,
             value: dotAccessor(data, key) || '',
             onChange: (e: any) => {
