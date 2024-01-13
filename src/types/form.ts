@@ -123,7 +123,8 @@ export type SetPropCallback = (key: string, value: FormValue) => void;
 // Use Form Tools
 export interface UseFormTools {
     formProps: Function;
-    inputProps: InputPropsCallback;
+    // inputProps: InputPropsCallback;
+    inputProps<T = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>>(key: string, sanitizeFn?: SanitizeInputCallback<T>): InputProps
     checkProps: CheckPropsCallback;
     textFieldProps: TextFieldPropsCallback;
     fileFieldProps: FileFieldPropsCallback;
