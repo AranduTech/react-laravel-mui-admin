@@ -94,7 +94,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         onChange: onChangeFn = () => null, debug = false, onError: onErrorFn = () => null,
         action, method = 'get', onSuccess: onSuccessFn = () => null,
         transformPayload: transformPayloadFn = (payload) => payload,
-        preventStructureChange = false,
+        preventStructureChange = false, formId,
     } = options;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -7,9 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc -w",
-    "link": "npm link react react-dom react-router-dom @mui/material @emotion/react @emotion/styled",
-    "postinstall": "npm run link"
-
+    "link": "npm link react react-dom react-router-dom @mui/material @emotion/react @emotion/styled"
   },
   "repository": {
     "type": "git",

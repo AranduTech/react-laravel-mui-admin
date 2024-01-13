@@ -56,7 +56,7 @@ export interface InputProps {
     onChange: InputChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }
 // Input Props Callback
-export type InputPropsCallback = (key: string, sanitizeFn?: SanitizeInputCallback<React.ChangeEvent<HTMLInputElement | HTMLSelectElement>>) => InputProps;
+export type InputPropsCallback<T = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>> = (key: string, sanitizeFn?: SanitizeInputCallback<T>) => InputProps;
 
 // TextField Props
 export interface TextFieldProps<T = React.ChangeEvent<HTMLInputElement>, U = string | number | Date | null> {
@@ -155,6 +155,7 @@ export interface UseFormOptions {
     onSuccess?: (response: any) => void;
     transformPayload?: (payload: FormState) => any;
     preventStructureChange?: boolean;
+    formId?: string;
 }
 
 export interface FormFieldProps {
