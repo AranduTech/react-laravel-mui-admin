@@ -6,7 +6,10 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "tsc -w"
+    "start": "tsc -w",
+    "link": "npm link react react-dom react-router-dom @mui/material @emotion/react @emotion/styled",
+    "postinstall": "npm run link"
+
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,7 @@
   "homepage": "https://github.com/AranduTech/react-laravel-mui-admin#readme",
   "devDependencies": {
     "@babel/runtime": "^7.22.5",
+    "@mui/types": "^7.2.13",
     "@types/lodash": "^4.14.195",
     "@types/react": "^18.2.12",
     "@types/uuid": "^9.0.2",
