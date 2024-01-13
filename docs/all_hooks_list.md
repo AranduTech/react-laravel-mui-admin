@@ -23,6 +23,7 @@
 `side_menu_layout_drawer_header_content`
 `side_menu_layout_drawer_sidebar_content`
 `side_menu_layout_menu_button`
+`use_form_clone_transfers`
 
 # Actions
 

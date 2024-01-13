@@ -11,6 +11,7 @@ import {
     UseFormTools
 } from './types/form';
 import { AutocompleteRenderInputParams, SelectChangeEvent } from '@mui/material';
+import applyFilters from './applyFilters';
 
 const checkIfValueIsValid: (value: any) => boolean = (value) => ['string', 'number', 'boolean'].includes(typeof value)
     || value === null
@@ -139,7 +140,16 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         }
 
         setData((data) => {
-            const newData = structuredClone(data);
+            // const newData = structuredClone(data);
+
+            const transfer = applyFilters(
+                'use_form_clone_transfers',
+                [],
+                { formId, data, key, value }
+            );
+
+            const newData = structuredClone(data, { transfer });
+
             dotSetter(newData, key, value);
 
             if (validateOnInputChange) {
