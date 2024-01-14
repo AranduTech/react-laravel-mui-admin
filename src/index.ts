@@ -24,6 +24,8 @@ import useFetchList from './useFetchList';
 import useForm from './useForm';
 import useModel from './useModel';
 import useModels from './useModels';
+import useRepositoryIndex from './useRepositoryIndex';
+import usePaginatedTable from './usePaginatedTable';
 
 import * as plugins from './plugins';
 import * as components from './components';
@@ -59,6 +61,8 @@ export {
     useForm,
     useModel,
     useModels,
+    useRepositoryIndex,
+    usePaginatedTable,
 }
 
 export const CsrfToken = components.CsrfToken;

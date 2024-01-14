@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 import { dotAccessor } from '../../support/object';
 
-import ActionButton from './ActionButton';
+import ItemActionButton from './ItemActionButton';
 import mediaQuery from './mediaQuery';
 import { Model, ModelTableColumnDefinition } from '../../types/model';
 import { DefaultComponentProps } from '@mui/material/OverridableComponent';
@@ -117,7 +117,7 @@ const ItemRow = ({
                 </TableCell>
             )}
             <TableCell sx={{ width: '1%', px: { xs: 0, md: 2 } }}>
-                <ActionButton item={item} />
+                <ItemActionButton item={item} />
             </TableCell>
         </TableRow>
     );

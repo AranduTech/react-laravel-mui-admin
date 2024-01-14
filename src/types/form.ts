@@ -1,12 +1,15 @@
 // Imports
-import { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteRenderInputParams, Grid2Props, TextFieldProps as MuiTextFieldProps, SelectChangeEvent } from '@mui/material';
+import { 
+    AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteRenderInputParams, 
+    Grid2Props, TextFieldProps as MuiTextFieldProps, SelectChangeEvent 
+} from '@mui/material';
 import { ReactNode } from 'react';
 import { Method } from 'axios';
 
 
-export interface FormFieldDefinition {
+export type FormFieldDefinition = Omit<TextFieldProps, 'onChange' | 'value'> & {
     name: string,
-    type?: 'label' | 'text' | 'email' | 'password' | 'tel' | 'number' | 'date' | 'checkbox' | 'radio' | 'select' | 'file' | 'textarea' | 'autocomplete',
+    type?: 'label' | 'text' | 'email' | 'password' | 'tel' | 'number' | 'date' | 'checkbox' | 'radio' | 'select' | 'file' | 'textarea' | 'autocomplete' | string,
     label?: string,
     initialValue?: any,
     required?: boolean,
@@ -30,7 +33,9 @@ export interface FormFieldDefinition {
     inputProps?: any,
     usesData?: string[],
     refreshWhileTyping?: boolean,
-
+    /* allow custom props */
+    [key: string]: any,
+    
 }
 
 

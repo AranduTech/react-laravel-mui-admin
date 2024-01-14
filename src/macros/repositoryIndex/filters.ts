@@ -1,4 +1,4 @@
-import { ActionItem } from '../../components/RepositoryIndex/ActionButton';
+import { ActionItem } from '../../components/RepositoryIndex/ItemActionButton';
 import modelRepository from '../../internals/singletons/ModelRepository';
 
 import t from '../../t';
