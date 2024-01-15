@@ -202,6 +202,10 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
                 <SpeedDial
                     ariaLabel="select model action"
                     icon={<SpeedDialIcon />}
+                    sx={{
+                        display: isFull ? 'none' : 'flex'
+                    }}
+                    {...SpeedDialProps}
                 >
                     {options.map(({ icon, label, callback }) => (
                         <SpeedDialAction
