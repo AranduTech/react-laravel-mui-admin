@@ -10,15 +10,21 @@ import useApplyFilters from '../../useApplyFilters';
 import macros from '../../internals/singletons/MacroService';
 
 export type WidgetProps = {
-    debug?: boolean;
     args?: string[];
+    debug?: boolean;
 } & WidgetData;
 
 
 const fallback = ({ type }: { type: string }) => <p>Cannot find widget type: {type}</p>;
 
 const Widget = ({ 
-    data, uri, layout: { grid = { xs: 12, md: 6, lg: 4 }, type: typeDefinition },
+    data, uri, 
+    layout: { 
+        type: typeDefinition, 
+        grid = { xs: 12, md: 6, lg: 4 }, 
+        style = {}, 
+        options = {}
+    },
     debug = false, ...props
 }: WidgetProps) => {
 
@@ -46,9 +52,7 @@ const Widget = ({
 
     return (
         <Grid {...grid}>
-
             <Card sx={{ p: 2 }}>
-
                 {typeof typeDefinition !== 'string' && (
                     <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
                         {typeDefinition.map((type: string) => (
@@ -58,11 +62,13 @@ const Widget = ({
                 )}
 
                 <Component 
+                    uri={uri}
                     type={type}
                     data={data}
-                    uri={uri}
-                    debug={debug}
+                    style={style}
+                    options={options}
                     args={args}
+                    debug={debug}
                     {...props}
                 />
             </Card>

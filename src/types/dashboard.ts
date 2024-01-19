@@ -28,8 +28,8 @@ export interface Dimension {
 }
 
 export interface WidgetLayout {
-    grid?: Grid2Props;
     type: string | string[];
+    grid?: Grid2Props;
+    style?: object;
+    options?: object;
 }
-
-
