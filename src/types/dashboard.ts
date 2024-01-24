@@ -30,6 +30,14 @@ export interface Dimension {
 export interface WidgetLayout {
     type: string | string[];
     grid?: Grid2Props;
-    style?: object;
-    options?: object;
+    style: WidgetLayoutStyle;
+    options: WidgetLayoutOptions;
+}
+
+interface WidgetLayoutStyle {
+    [key: string]: any;
+}
+
+interface WidgetLayoutOptions {
+    [key: string]: any;
 }
