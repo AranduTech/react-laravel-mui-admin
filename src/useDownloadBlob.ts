@@ -23,19 +23,16 @@ export default () => {
             : defaultDownloadRoute;
 
         const response = await axios({
-            url: route(
-                apiRoute, 
-                { 
-                    driver, 
-                    folder, 
-                    filename: file.filename 
-                }
-            ),
             method: 'GET',
+            url: route(apiRoute, { filename: file.filename }),
+            data: {
+                driver, 
+                folder, 
+            },
             responseType: 'blob',
         });
 
-        const filename = file?.name.split('.')[0];
+        const filename = file.name.split('.')[0];
         const fileBlob = response.data;
 
         return {
