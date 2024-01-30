@@ -19,7 +19,7 @@ import useApiRequest from './useApiRequest';
 import useApplyFilters from './useApplyFilters';
 import useClearErrorsOnExit from './useClearErrorsOnExit';
 import useDashboard from './useDashboard';
-import useBlob from './useDownloadBlob';
+import useBlob from './useBlob';
 import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
