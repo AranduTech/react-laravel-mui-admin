@@ -19,7 +19,7 @@ import useApiRequest from './useApiRequest';
 import useApplyFilters from './useApplyFilters';
 import useClearErrorsOnExit from './useClearErrorsOnExit';
 import useDashboard from './useDashboard';
-import useDownloadBlob from './useDownloadBlob';
+import useBlob from './useDownloadBlob';
 import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
@@ -57,7 +57,7 @@ export {
     useApplyFilters,
     useClearErrorsOnExit,
     useDashboard,
-    useDownloadBlob,
+    useBlob,
     useFetchItem,
     useFetchList,
     useForm,
