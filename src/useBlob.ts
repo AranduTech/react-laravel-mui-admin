@@ -24,11 +24,14 @@ export default () => {
 
         const response = await axios({
             method: 'GET',
-            url: route(apiRoute, { filename: file.filename }),
-            data: {
-                driver, 
-                folder, 
-            },
+            url: route(
+                apiRoute, 
+                { 
+                    driver, 
+                    folder, 
+                    filename: file.filename 
+                }
+            ),
             responseType: 'blob',
         });
 
