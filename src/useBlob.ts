@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import route from './route';
 import config from './config';
+import toast from './toast';
 
 
 const defaultDownloadRoute = 'api.file.download';
@@ -34,6 +35,10 @@ export default () => {
             ),
             responseType: 'blob',
         });
+
+        if (response.status !== 200) {
+            toast.error(response.data.message || 'Error downloading file');
+        }
 
         const filename = file.name.split('.')[0];
         const fileBlob = response.data;
