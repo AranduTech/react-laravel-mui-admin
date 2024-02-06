@@ -53,6 +53,7 @@ export interface PaginatedTableProps {
         from?: number;
         to?: number;
     };
+    showSearch?: boolean;
     onPageChange: (page: number) => void;
     onPerPageChange?: (perPage: number) => void;
 };
@@ -62,7 +63,7 @@ const PaginatedTable = ({
     onMassAction: handleMassActionSubmit, onClickItem = () => null, pagination,
     onPageChange: handlePageChange, onPerPageChange: handlePerPageChange,
     onApplyFilters: handleApplyFilters = () => null, filtersApplied = {},
-    orderBy, onSort: handleSort = () => null,
+    orderBy, onSort: handleSort = () => null, showSearch = true,
     ...props
 }: PaginatedTableProps) => {
 
@@ -94,36 +95,39 @@ const PaginatedTable = ({
                                 alignItems="stretch"
                             >
                                 <Stack direction="row">
-                                    <Stack
-                                        component="form"
-                                        direction="row"
-                                        spacing={2}
-                                        autoComplete="off"
-                                        {...searchFormProps()}
-                                    >
-                                        <TextField
-                                            fullWidth={!isFull}
-                                            // autoComplete="new-password"
-                                            label={t('common.search')}
-                                            size="small"
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <IconButton
-                                                        size="small"
-                                                        type="submit"
-                                                    >
-                                                        <Icon name="search" />
-                                                    </IconButton>
-                                                ),
-                                            }}
-                                            {...searchInputProps('search', (e) => {
-                                                if (e.target.value === '') {
-                                                    handleSearchSubmit({ search: '' }, () => null);
-                                                }
-                                                return e.target.value;
-                                            })}
-                                        />
-                                    </Stack>
+                                    {showSearch && (
+                                        <Stack
+                                            component="form"
+                                            direction="row"
+                                            spacing={2}
+                                            autoComplete="off"
+                                            {...searchFormProps()}
+                                        >
+                                            <TextField
+                                                fullWidth={!isFull}
+                                                // autoComplete="new-password"
+                                                label={t('common.search')}
+                                                size="small"
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <IconButton
+                                                            size="small"
+                                                            type="submit"
+                                                        >
+                                                            <Icon name="search" />
+                                                        </IconButton>
+                                                    ),
+                                                }}
+                                                {...searchInputProps('search', (e) => {
+                                                    if (e.target.value === '') {
+                                                        handleSearchSubmit({ search: '' }, () => null);
+                                                    }
+                                                    return e.target.value;
+                                                })}
+                                            />
+                                        </Stack>
+                                    )}
+
                                     <Stack
                                         direction="row"
                                         spacing={2}
