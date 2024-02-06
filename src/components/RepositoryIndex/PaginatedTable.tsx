@@ -53,7 +53,7 @@ export interface PaginatedTableProps {
         from?: number;
         to?: number;
     };
-    showSearch?: boolean;
+    showHeaderTools?: boolean;
     onPageChange: (page: number) => void;
     onPerPageChange?: (perPage: number) => void;
 };
@@ -63,7 +63,7 @@ const PaginatedTable = ({
     onMassAction: handleMassActionSubmit, onClickItem = () => null, pagination,
     onPageChange: handlePageChange, onPerPageChange: handlePerPageChange,
     onApplyFilters: handleApplyFilters = () => null, filtersApplied = {},
-    orderBy, onSort: handleSort = () => null, showSearch = true,
+    orderBy, onSort: handleSort = () => null, showHeaderTools = true,
     ...props
 }: PaginatedTableProps) => {
 
@@ -86,16 +86,16 @@ const PaginatedTable = ({
         <TableContainer component={Paper}>
             <Table {...props}>
                 <TableHead>
-                    <TableRow>
-                        <TableCell colSpan={columnCount}>
-                            <Stack
-                                direction={isFull ? 'row' : 'column'}
-                                spacing={1}
-                                justifyContent="space-between"
-                                alignItems="stretch"
-                            >
-                                <Stack direction="row">
-                                    {showSearch && (
+                    {showHeaderTools && (
+                        <TableRow>
+                            <TableCell colSpan={columnCount}>
+                                <Stack
+                                    direction={isFull ? 'row' : 'column'}
+                                    spacing={1}
+                                    justifyContent="space-between"
+                                    alignItems="stretch"
+                                >
+                                    <Stack direction="row">
                                         <Stack
                                             component="form"
                                             direction="row"
@@ -126,108 +126,108 @@ const PaginatedTable = ({
                                                 })}
                                             />
                                         </Stack>
-                                    )}
-
-                                    <Stack
-                                        direction="row"
-                                        spacing={2}
-                                    >
-                                        {filter && (
-                                            <>
-                                                <IconButton
-                                                    aria-describedby={filterId}
-                                                    onClick={handleFilterOpen}
-                                                >
-                                                    <Badge color="primary" badgeContent={Object.keys(filtersApplied).length}>
-                                                        <Icon name="filterList" />
-                                                    </Badge>
-                                                </IconButton>
-                                                <Popover
-                                                    id={filterId}
-                                                    open={filterOpen}
-                                                    anchorEl={filterButtonEl}
-                                                    onClose={handleFilterClose}
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'left',
-                                                    }}
-                                                >
-                                                    <Paper sx={{ p: 2, maxWidth: 'min(700px, 80vw)' }}>
-                                                        <Form
-                                                            fields={filter}
-                                                            form={filterForm}
-                                                            spacing={1}
-                                                            submitText={t('common.apply') as string}
-                                                            cancelText={t('common.clear') as string}
-                                                            showCancelButton
-                                                            onCancel={handleFilterClear}
-                                                        />
-                                                    </Paper>
-                                                </Popover>
-                                            </>
-                                        )}
-                                    </Stack>
-                                </Stack>
-                                <Stack
-                                    component="form"
-                                    direction="row"
-                                    justifyContent="stretch"
-                                    spacing={2}
-                                    {...massActionFormProps()}
-                                >
-                                    
-                                    <FormControl
-                                        size="small"
-                                        fullWidth={!isFull}
-                                        sx={{ minWidth: 180 }}
-                                    >
-                                        <InputLabel id="mass-actions-label">
-                                            {t('table.actions.select')}
-                                        </InputLabel>
-                                        <Select
-                                            label={t('table.actions.select')}
-                                            labelId="mass-actions-label"
-                                            disabled={(selected as number[]).length === 0}
-                                            {...massActionInputProps('massAction') as any}
+                                        <Stack
+                                            direction="row"
+                                            spacing={2}
                                         >
-                                            {massActions.map((action) => (
-                                                <MenuItem
-                                                    key={action.name}
-                                                    value={action.name}
-                                                >
-                                                    {action.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        type="submit"
-                                        disabled={(selected as number[]).length === 0 || massAction === ''}
+                                            {filter && (
+                                                <>
+                                                    <IconButton
+                                                        aria-describedby={filterId}
+                                                        onClick={handleFilterOpen}
+                                                    >
+                                                        <Badge color="primary" badgeContent={Object.keys(filtersApplied).length}>
+                                                            <Icon name="filterList" />
+                                                        </Badge>
+                                                    </IconButton>
+                                                    <Popover
+                                                        id={filterId}
+                                                        open={filterOpen}
+                                                        anchorEl={filterButtonEl}
+                                                        onClose={handleFilterClose}
+                                                        anchorOrigin={{
+                                                            vertical: 'bottom',
+                                                            horizontal: 'left',
+                                                        }}
+                                                    >
+                                                        <Paper sx={{ p: 2, maxWidth: 'min(700px, 80vw)' }}>
+                                                            <Form
+                                                                fields={filter}
+                                                                form={filterForm}
+                                                                spacing={1}
+                                                                submitText={t('common.apply') as string}
+                                                                cancelText={t('common.clear') as string}
+                                                                showCancelButton
+                                                                onCancel={handleFilterClear}
+                                                            />
+                                                        </Paper>
+                                                    </Popover>
+                                                </>
+                                            )}
+                                        </Stack>
+                                    </Stack>
+                                    <Stack
+                                        component="form"
+                                        direction="row"
+                                        justifyContent="stretch"
+                                        spacing={2}
+                                        {...massActionFormProps()}
                                     >
-                                        {t('table.actions.submit')}
-                                    </Button>
+                                        
+                                        <FormControl
+                                            size="small"
+                                            fullWidth={!isFull}
+                                            sx={{ minWidth: 180 }}
+                                        >
+                                            <InputLabel id="mass-actions-label">
+                                                {t('table.actions.select')}
+                                            </InputLabel>
+                                            <Select
+                                                label={t('table.actions.select')}
+                                                labelId="mass-actions-label"
+                                                disabled={(selected as number[]).length === 0}
+                                                {...massActionInputProps('massAction') as any}
+                                            >
+                                                {massActions.map((action) => (
+                                                    <MenuItem
+                                                        key={action.name}
+                                                        value={action.name}
+                                                    >
+                                                        {action.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            type="submit"
+                                            disabled={(selected as number[]).length === 0 || massAction === ''}
+                                        >
+                                            {t('table.actions.submit')}
+                                        </Button>
+                                    </Stack>
+
                                 </Stack>
+                                {!isFull && (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                color="primary"
+                                                indeterminate={checkIndeterminate}
+                                                checked={checkSelected}
+                                                onChange={handleSelectAllClick}
+                                                inputProps={{ 'aria-label': 'select all' }}
+                                            />
+                                        }
+                                        label={t('table.actions.selectAll')}
+                                    />
 
-                            </Stack>
-                            {!isFull && (
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            color="primary"
-                                            indeterminate={checkIndeterminate}
-                                            checked={checkSelected}
-                                            onChange={handleSelectAllClick}
-                                            inputProps={{ 'aria-label': 'select all' }}
-                                        />
-                                    }
-                                    label={t('table.actions.selectAll')}
-                                />
-
-                            )}
-                        </TableCell>
-                    </TableRow>
+                                )}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                    
                     {isFull && (
                         <TableRow>
                             {massActions.length > 0 && (
