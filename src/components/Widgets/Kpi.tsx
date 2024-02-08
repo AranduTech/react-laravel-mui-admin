@@ -14,9 +14,20 @@ const Kpi = (props: WidgetProps) => {
                 {props.title}
             </Typography>
             
-            {props.values.map(({ key, alias = key }, index) => (
-                <h1 key={alias}>{props.data[index][alias]}</h1>
-            ))}
+            {(props.values || []).map(({ key, alias = key }, index) => {
+                if (
+                    props.data[index]
+                    && alias in props.data[index]
+                    && props.data[index][alias]
+                ) {
+                    return (
+                        <h1 key={alias}>{props.data[index][alias]}</h1>
+                    );
+                }
+                return (
+                    <h1 key={alias}>-</h1>
+                )
+            })}
             
         </>
     );
