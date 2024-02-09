@@ -10,7 +10,7 @@ import dialogService from './internals/singletons/Dialog';
 import { useTranslation } from 'react-i18next';
 
 export type UseDashboardOptions = {
-    filter?: FormState,
+    filters?: FormState,
     debug?: boolean,
 }
 
@@ -18,7 +18,7 @@ export default (dashboard: string, opts: UseDashboardOptions = {}) => {
 
     const { t } = useTranslation();
 
-    const { filter, debug = false } = opts;
+    const { filters, debug = false } = opts;
 
     const [data, setData] = React.useState<Dashboard|null>(null);
     const [widgets, setWidgets] = React.useState<WidgetData[]>([]);
@@ -35,7 +35,7 @@ export default (dashboard: string, opts: UseDashboardOptions = {}) => {
             cancelText: t('no') as string,
         }).then(async (result) => {
             if (result) {
-                bi().download(dashboard, filter);
+                bi().download(dashboard, filters);
             }
         });
     }, []);
@@ -63,7 +63,12 @@ export default (dashboard: string, opts: UseDashboardOptions = {}) => {
             const widgetUris = data.widgets.map(widget => widget.uri);
 
             widgetUris.forEach((uri) => {
-                axios(route('admin.bi.data', { dashboard, widget: uri })).then(({ data: response }) => {
+                axios({
+                    url: route('admin.bi.data', { dashboard, widget: uri }),
+                    params: {
+                        filters: JSON.stringify(filters),
+                    },
+                }).then(({ data: response }) => {
                     if (debug) {
                         console.log('got widget data', uri, response);
                     }

@@ -10,13 +10,13 @@ import { FormState } from '../types/form';
 export type DashboardProps = {
     name: string;
     exportable?: boolean;
-    filter?: FormState;
+    filters?: FormState;
     debug?: boolean;
 } & Grid2Props;
 
-const Dashboard = ({ name, filter, exportable, debug = false, ...props }: DashboardProps) => {
+const Dashboard = ({ name, filters, exportable, debug = false, ...props }: DashboardProps) => {
 
-    const { dashboard, widgets, download, error } = useDashboard(name, { debug, filter });
+    const { dashboard, widgets, download, error } = useDashboard(name, { debug, filters });
     
     if (error) {
         console.error(error);
