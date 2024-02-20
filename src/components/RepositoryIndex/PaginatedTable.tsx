@@ -207,8 +207,8 @@ const PaginatedTable = ({
                                             {t('table.actions.submit')}
                                         </Button>
                                     </Stack>
-
                                 </Stack>
+                                
                                 {!isFull && (
                                     <FormControlLabel
                                         control={

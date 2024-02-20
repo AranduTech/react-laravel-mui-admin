@@ -26,7 +26,8 @@ const Widget = ({
         style = {}, 
         options = {}
     },
-    debug = false, ...props
+    debug = false, 
+    ...props
 }: WidgetProps) => {
 
     const [selectedType, setSelectedType] = React.useState(typeof typeDefinition === 'string' 

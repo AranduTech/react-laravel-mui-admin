@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 import { WidgetProps } from './Widget';
@@ -9,12 +10,12 @@ const Kpi = (props: WidgetProps) => {
         console.log(props);
     }
 
-    const { 
-        format: { 
-            locale = undefined, 
-            options = {} 
-        }
-    } = props.layout.options;
+    // const { 
+    //     format: { 
+    //         locale = undefined, 
+    //         options = {} 
+    //     }
+    // } = props.layout.options;
 
     return (
         <>
@@ -28,14 +29,18 @@ const Kpi = (props: WidgetProps) => {
                     && alias in props.data[index]
                     && props.data[index][alias]
                 ) {
-                    const value = props.data[index][alias].toLocaleString(
-                        locale, 
-                        options
+                    return (
+                        <h1 key={alias}>{props.data[index][alias]}</h1>
                     );
 
-                    return (
-                        <h1 key={alias}>{value}</h1>
-                    );
+                    // const value = props.data[index][alias].toLocaleString(
+                    //     locale, 
+                    //     options
+                    // );
+
+                    // return (
+                    //     <h1 key={alias}>{value}</h1>
+                    // );
                 }
 
                 return (
