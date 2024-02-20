@@ -8,6 +8,14 @@ const Kpi = (props: WidgetProps) => {
     if (props.debug) {
         console.log(props);
     }
+
+    const { 
+        format: { 
+            locale = undefined, 
+            options = {} 
+        }
+    } = props.layout.options;
+
     return (
         <>
             <Typography>
@@ -20,15 +28,20 @@ const Kpi = (props: WidgetProps) => {
                     && alias in props.data[index]
                     && props.data[index][alias]
                 ) {
+                    const value = props.data[index][alias].toLocaleString(
+                        locale, 
+                        options
+                    );
+
                     return (
-                        <h1 key={alias}>{props.data[index][alias]}</h1>
+                        <h1 key={alias}>{value}</h1>
                     );
                 }
+
                 return (
                     <h1 key={alias}>-</h1>
                 )
             })}
-            
         </>
     );
 };

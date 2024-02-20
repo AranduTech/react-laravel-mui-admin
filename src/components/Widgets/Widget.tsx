@@ -9,10 +9,11 @@ import Kpi from './Kpi';
 import useApplyFilters from '../../useApplyFilters';
 import macros from '../../internals/singletons/MacroService';
 
-export type WidgetProps = {
+
+export type WidgetProps = WidgetData & {
     args?: string[];
     debug?: boolean;
-} & WidgetData;
+};
 
 
 const fallback = ({ type }: { type: string }) => <p>Cannot find widget type: {type}</p>;
@@ -32,7 +33,6 @@ const Widget = ({
         ? typeDefinition 
         : typeDefinition[0]);
 
-
     const [type, argumentList] = selectedType.split(':');
     const args = argumentList ? argumentList.split(',') : [];
 
@@ -49,9 +49,8 @@ const Widget = ({
         { type, uri }
     );
 
-
     return (
-        <Grid {...grid}>
+        <Grid position="relative" {...grid} >
             <Card sx={{ p: 2 }}>
                 {typeof typeDefinition !== 'string' && (
                     <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
@@ -65,17 +64,17 @@ const Widget = ({
                     uri={uri}
                     type={type}
                     data={data}
-                    style={style}
-                    options={options}
                     args={args}
+                    layout={{
+                        style,
+                        options,
+                    }}
                     debug={debug}
                     {...props}
                 />
             </Card>
         </Grid>
-
     );
 };
 
 export default Widget;
-
