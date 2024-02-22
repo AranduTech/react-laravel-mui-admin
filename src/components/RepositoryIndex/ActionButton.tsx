@@ -28,7 +28,7 @@ export type ModelAction = {
 }
 
 type ActionButtonProps = {
-    isFull?: boolean;
+    overrideClassName?: string;
     setSearchParams: SetURLSearchParams;
     slotProps?: {
         ButtonGroup?: ButtonGroupOwnProps;
@@ -36,6 +36,7 @@ type ActionButtonProps = {
         Fab?: FabProps;
         SpeedDial?: SpeedDialProps;
     };
+    isFull?: boolean;
 };
 
 
@@ -52,12 +53,15 @@ const SpeedDial = styled(MuiSpeedDial)(({ theme }) => ({
 }));
 
 const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
-    isFull = true,
+    overrideClassName = null,
     setSearchParams,
     slotProps = {},
+    isFull = true,
 }) => {
 
-    const { className } = useLoaderData() as any;
+    const { className: loaderClassName } = useLoaderData() as any;
+
+    const className = overrideClassName ?? loaderClassName;
 
     const navigate = useNavigate();
 
