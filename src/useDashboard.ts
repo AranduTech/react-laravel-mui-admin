@@ -40,22 +40,29 @@ export default (dashboard: string, opts: UseDashboardOptions = {}) => {
         });
     }, []);
 
-    React.useEffect(() => {
-        const fetchDashboard = async () => {
-            try {
-                const { data: response } = await axios(route('admin.bi', { dashboard }));
+    const fetchDashboard = async () => {
+        setLoading(true);
+
+        axios(route('admin.bi', { dashboard }))
+            .then(({ data: response }) => {
                 setData(response);
-            } catch (error) {
+            })
+            .catch((error) => {
                 setError(error);
-            } finally {
+            })
+            .finally(() => {
                 setLoading(false);
-            }
-        };
+            });
+    };
+
+    React.useEffect(() => {
         fetchDashboard();
-    }, [dashboard]);
+    }, [dashboard, filters]);
 
     React.useEffect(() => {
         if (data) {
+            setLoading(true);
+
             if (debug) {
                 console.log('dashboard data changed', data);
             }
@@ -68,18 +75,25 @@ export default (dashboard: string, opts: UseDashboardOptions = {}) => {
                     params: {
                         filters: JSON.stringify(filters),
                     },
-                }).then(({ data: response }) => {
-                    if (debug) {
-                        console.log('got widget data', uri, response);
-                    }
-                    setWidgets((widgets) => [
-                        ...widgets.filter((widget) => widget.uri !== uri),
-                        {
-                            ...(data.widgets.find((widget) => widget.uri === uri) as Widget),
-                            data: response as any[], 
-                        },
-                    ].sort((a, b) => widgetUris.indexOf(a.uri) - widgetUris.indexOf(b.uri)));
-                });
+                })
+                    .then(({ data: response }) => {
+                        if (debug) {
+                            console.log('got widget data', uri, response);
+                        }
+                        setWidgets((widgets) => [
+                            ...widgets.filter((widget) => widget.uri !== uri),
+                            {
+                                ...(data.widgets.find((widget) => widget.uri === uri) as Widget),
+                                data: response as any[], 
+                            },
+                        ].sort((a, b) => widgetUris.indexOf(a.uri) - widgetUris.indexOf(b.uri)));
+                    })
+                    .catch((error) => {
+                        setError(error);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
             });
         }
     }, [data]);
