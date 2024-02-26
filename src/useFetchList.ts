@@ -1,14 +1,16 @@
 import useApiRequest from './useApiRequest';
 
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Model as ModelClass, ModelConstructorAttributes } from './types/model';
+
+import {  Model as ModelClass, ModelConstructorAttributes } from './types/model';
 import route from './route';
 import { LaravelPaginatedResponse } from './types/laravel';
 
-interface UseFetchListOptions {
-    ignoreSearchParams?: string[];
-}
+type UseFetchListOptions = {
+    initialQuery?: {
+        [key: string]: string,
+    };
+};
 
 /**
  * UseFetchList.
@@ -17,23 +19,22 @@ interface UseFetchListOptions {
  * @param options - Opções.
  * @return - Dados da requisição.
  */
-const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) => {
-    const { ignoreSearchParams = [] } = options || {};
+const useFetchList = (Model: typeof ModelClass, options: UseFetchListOptions = {}) => {
 
-    const [searchParams, setSearchParams] = useSearchParams(new URL(document.location.toString()).searchParams);
+    // const [searchParams, setSearchParams] = useSearchParams(new URL(document.location.toString()).searchParams);
+    const { initialQuery = {} } = options;
+
+    const [query, setQuery] = React.useState(initialQuery);
 
     const url = React.useMemo(() => {
         const params = new URLSearchParams();
 
-        searchParams.forEach((value, key) => {
-            if (ignoreSearchParams.includes(key)) {
-                return;
-            }
-            params.set(key, searchParams.get(key) as string);
+        Object.entries(query).forEach(([key, value]) => {
+            params.set(key, value);
         });
 
         return `${route(`admin.${Model.getSchemaName()}.list`)}?${params.toString()}`;
-    }, [searchParams, Model, ignoreSearchParams]);
+    }, [query, Model]);
 
     const {
         response, error, loading, refresh,
@@ -46,7 +47,7 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         tab = 'all',
         filters = '{}',
         order_by = '',
-    } = React.useMemo(() => Object.fromEntries((searchParams as any).entries()), [searchParams]);
+    } = query;//React.useMemo(() => Object.fromEntries((searchParams as any).entries()), [searchParams]);
 
     const {
         data: responseData,
@@ -63,52 +64,28 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
     );
 
     const setTab = React.useCallback((value: string) => {
-        setSearchParams(() => {
-            const { searchParams } = new URL(document.location.toString());
-            searchParams.set('tab', value);
-            return searchParams;
-        }, { replace: true });
-    }, [setSearchParams]);
+        setQuery((prev) => ({ ...prev, tab: value }));
+    }, []);
 
     const setPage = React.useCallback((value: string) => {
-        setSearchParams(() => {
-            const { searchParams } = new URL(document.location.toString());
-            searchParams.set('page', value);
-            return searchParams;
-        }, { replace: true });
-    }, [setSearchParams]);
+        setQuery((prev) => ({ ...prev, page: value }));
+    }, []);
 
     const setPerPage = React.useCallback((value: string) => {
-        setSearchParams(() => {
-            const { searchParams } = new URL(document.location.toString());
-            searchParams.set('per_page', value);
-            return searchParams;
-        }, { replace: true });
-    }, [setSearchParams]);
+        setQuery((prev) => ({ ...prev, per_page: value }));
+    }, []);
 
     const setSearch = React.useCallback((value: string) => {
-        setSearchParams(() => {
-            const { searchParams } = new URL(document.location.toString());
-            searchParams.set('q', value);
-            return searchParams;
-        }, { replace: true });
-    }, [setSearchParams]);
+        setQuery((prev) => ({ ...prev, q: value }));
+    }, []);
 
     const setFilters = React.useCallback((value: any) => {
-        setSearchParams(() => {
-            const { searchParams } = new URL(document.location.toString());
-            searchParams.set('filters', JSON.stringify(value));
-            return searchParams;
-        }, { replace: true });
-    }, [setSearchParams]);
+        setQuery((prev) => ({ ...prev, filters: JSON.stringify(value) }));
+    }, []);
 
     const setOrderBy = React.useCallback((value: string) => {
-        setSearchParams(() => {
-            const { searchParams } = new URL(document.location.toString());
-            searchParams.set('order_by', value);
-            return searchParams;
-        }, { replace: true });
-    }, [setSearchParams]);
+        setQuery((prev) => ({ ...prev, order_by: value }));
+    }, []);
 
     return {
         items,
@@ -137,8 +114,8 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
             response,
             error,
             loading,
-            searchParams,
-            setSearchParams,
+            currentQuery: query,
+            setQuery,
         },
 
     };

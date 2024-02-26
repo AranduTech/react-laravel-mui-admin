@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import toastService from './internals/singletons/Toast';
 import modelRepository from './internals/singletons/ModelRepository';
 
-import useFetchList from './useFetchList';
 import useApplyFilters from './useApplyFilters';
 import useAddAction from './useAddAction';
 
@@ -18,6 +17,7 @@ import { FormState } from './types/form';
 import doAction from './doAction';
 import { Model } from './types/model';
 import dialogService, { DialogOptions } from './internals/singletons/Dialog';
+import useBrowsableList from './useBrowsableList';
 
 export interface ModelTab {
     name: string;
@@ -61,7 +61,7 @@ export default function useRepositoryIndex()
         refresh, setPage, setTab, setPerPage, setSearch, setFilters, setOrderBy,
         query: { tab, filters, order_by },
         request: { loading, searchParams, setSearchParams },
-    } = useFetchList(Model, { ignoreSearchParams: ['id'] });
+    } = useBrowsableList(Model, { ignoreSearchParams: ['id'] });
 
     const [isDirty, setIsDirty] = React.useState(false);
 

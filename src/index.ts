@@ -20,6 +20,7 @@ import useApplyFilters from './useApplyFilters';
 import useClearErrorsOnExit from './useClearErrorsOnExit';
 import useDashboard from './useDashboard';
 import useBlob from './useBlob';
+import useBrowsableList from './useBrowsableList';
 import useFetchItem from './useFetchItem';
 import useFetchList from './useFetchList';
 import useForm from './useForm';
@@ -55,6 +56,7 @@ export {
     useAddAction,
     useApiRequest,
     useApplyFilters,
+    useBrowsableList,
     useClearErrorsOnExit,
     useDashboard,
     useBlob,
