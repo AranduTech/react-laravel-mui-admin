@@ -24,7 +24,8 @@ const Widget = ({
         type: typeDefinition, 
         grid = { xs: 12, md: 6, lg: 4 }, 
         style = {}, 
-        options = {}
+        options = {},
+        ...layout
     },
     debug = false, 
     ...props
@@ -69,6 +70,7 @@ const Widget = ({
                     layout={{
                         style,
                         options,
+                        ...layout,
                     }}
                     debug={debug}
                     {...props}
