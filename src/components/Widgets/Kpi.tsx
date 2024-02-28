@@ -3,6 +3,7 @@ import React from 'react';
 
 import { WidgetProps } from './Widget';
 import { Typography } from '@mui/material';
+import config from '../../config';
 
 
 const Kpi = (props: WidgetProps) => {
@@ -10,12 +11,12 @@ const Kpi = (props: WidgetProps) => {
         console.log(props);
     }
 
-    // const { 
-    //     format: { 
-    //         locale = undefined, 
-    //         options = {} 
-    //     }
-    // } = props.layout.options;
+    const { 
+        format: { 
+            locale = document.documentElement.lang || config('lang.fallbackLng', 'en'),
+            options = { maximumSignificantDigits: 3 }
+        } = {},
+    } = props.layout;
 
     return (
         <>
@@ -27,20 +28,16 @@ const Kpi = (props: WidgetProps) => {
                 if (
                     props.data[index]
                     && alias in props.data[index]
-                    && props.data[index][alias]
+                    && typeof props.data[index][alias] === 'number'
                 ) {
-                    return (
-                        <h1 key={alias}>{props.data[index][alias]}</h1>
+                    const value = props.data[index][alias].toLocaleString(
+                        locale, 
+                        options
                     );
 
-                    // const value = props.data[index][alias].toLocaleString(
-                    //     locale, 
-                    //     options
-                    // );
-
-                    // return (
-                    //     <h1 key={alias}>{value}</h1>
-                    // );
+                    return (
+                        <h1 key={alias}>{value}</h1>
+                    );
                 }
 
                 return (
