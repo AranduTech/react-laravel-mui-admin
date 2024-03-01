@@ -115,22 +115,22 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
     return (
         <Autocomplete
             fullWidth
-            {...props}
-            {...autocompleteProps}
-            value={appliedValue}
-            multiple={multiple}
+            options={options}
+            loading={loading}
+            loadingText={t('loading')}
+            isOptionEqualToValue={(option, value) => option[valuedBy] === value[valuedBy]}
             getOptionLabel={(option) => dotExists(option, labeledBy)
                 ? dotAccessor(option, labeledBy)
                 : JSON.stringify(option)}
+            multiple={multiple}
+            {...props}
+            {...autocompleteProps}
+            value={appliedValue}
             onInputChange={(event, newInputValue) => {
                 console.log('got new input value ', { newInputValue, value: appliedValue });
                 setInputText(newInputValue)
             }}
-            isOptionEqualToValue={(option, value) => option[valuedBy] === value[valuedBy]}
             inputValue={inputText}
-            options={options}
-            loading={loading}
-            loadingText={t('loading')}
         />
     );
 };
