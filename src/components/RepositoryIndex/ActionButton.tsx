@@ -29,6 +29,7 @@ export type ModelAction = {
 
 type ActionButtonProps = {
     overrideClassName?: string;
+    useNewItem?: boolean;
     setSearchParams: SetURLSearchParams;
     slotProps?: {
         ButtonGroup?: ButtonGroupOwnProps;
@@ -54,6 +55,7 @@ const SpeedDial = styled(MuiSpeedDial)(({ theme }) => ({
 
 const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
     overrideClassName = null,
+    useNewItem = true,
     setSearchParams,
     slotProps = {},
     isFull = true,
@@ -73,15 +75,17 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
 
     const preOptions = useApplyFilters(
         'repository_index_model_actions',
-        [{
-            label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
-            callback: () => doAction(
-                'repository_index_new_item',
-                className,
-                { navigate, setSearchParams }
-            ),
-            icon: 'add',
-        }],
+        useNewItem
+            ? [{
+                label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
+                callback: () => doAction(
+                    'repository_index_new_item',
+                    className,
+                    { navigate, setSearchParams }
+                ),
+                icon: 'add',
+            }]
+            : [],
         className,
     );
 

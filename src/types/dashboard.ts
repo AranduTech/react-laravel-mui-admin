@@ -8,11 +8,11 @@ export interface Dashboard {
 }
 
 export interface Widget {
+    uri: string;
     groups: Dimension[];
     values: Dimension[];
     xAxis: Dimension[];
     title: string;
-    uri: string;
     layout: WidgetLayout;
 }
 
@@ -32,4 +32,3 @@ export interface WidgetLayout {
     grid?: Grid2Props;
     [key: string]: any;
 }
-
