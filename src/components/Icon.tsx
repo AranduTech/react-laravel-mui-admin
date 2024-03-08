@@ -1,5 +1,7 @@
 import React from 'react';
+
 import config from '../config';
+
 import { DefaultComponentProps } from '@mui/material/OverridableComponent';
 import { SvgIconTypeMap } from '@mui/material';
 
@@ -20,6 +22,16 @@ const Icon = ({ name, ...props }: IconProps) => {
 
     if (!Icon) {
         return null;
+    }
+
+    if (typeof Icon === 'string') {
+        return (
+            <img 
+                src={Icon} 
+                alt={name} 
+                {...props as React.ImgHTMLAttributes<HTMLImageElement>} 
+            />
+        );
     }
 
     return <Icon {...props} />;
