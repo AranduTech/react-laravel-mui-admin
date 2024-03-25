@@ -2,6 +2,7 @@
 import React from 'react';
 
 import { WidgetProps } from './Widget';
+import { TitleComponent } from './layout/title';
 import { Typography } from '@mui/material';
 import config from '../../config';
 
@@ -20,9 +21,9 @@ const Kpi = (props: WidgetProps) => {
 
     return (
         <>
-            <Typography>
+            <TitleComponent>
                 {props.title}
-            </Typography>
+            </TitleComponent>
             
             {(props.values || []).map(({ key, alias = key }, index) => {
                 if (
