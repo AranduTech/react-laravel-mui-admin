@@ -100,8 +100,6 @@ const AutocompleteField = ({ form, field }: FormFieldProps) => {
         };
     }, [name, cached, model, schema, ...usesDataDependencies, ...(refreshWhileTyping ? [inputText] : [])]);
 
-    console.log(`dependencies for field ${name}`, { usesDataDependencies, refreshWhileTyping, inputText });
-
     const appliedValue = React.useMemo(() => {
         if (typeof value === 'undefined') {
             if (multiple) {
