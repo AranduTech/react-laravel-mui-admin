@@ -92,7 +92,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
     const {
         initialValues: initialValuesOption = {}, onSubmit: onSubmitFn = () => null,
         validate: validateFn = () => [], validateOnInputChange = false, preventDefault = true,
-        onChange: onChangeFn = () => null, debug = false, onError: onErrorFn = () => null,
+        onChange = () => null, debug = false, onError: onErrorFn = () => null,
         action, method = 'get', onSuccess: onSuccessFn = () => null,
         transformPayload: transformPayloadFn = (payload) => payload,
         preventStructureChange = false, formId,
@@ -107,7 +107,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const onSubmit = React.useCallback(onSubmitFn, dependencies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const onChange = React.useCallback(onChangeFn, dependencies);
+    // const onChange = React.useCallback(onChangeFn, dependencies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const onSuccess = React.useCallback(onSuccessFn, dependencies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
