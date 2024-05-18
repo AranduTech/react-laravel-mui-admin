@@ -163,17 +163,19 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
                 setErrors(validate(newData));
             }
 
+            const changeEvent = {
+                key,
+                value,
+                previous: data,
+                data: newData,
+            };
+
             if (debug) {
                 // eslint-disable-next-line no-console
-                console.debug('[useForm] Form data updated', {
-                    key,
-                    value,
-                    prevData: data,
-                    nextData: newData,
-                });
+                console.debug('[useForm] Form data updated', changeEvent);
 
             }
-            onChange(newData);
+            onChange(changeEvent);
             return newData;
         });
     }, [preventStructureChange, initialValues, debug, validateOnInputChange, onChange, validate, formId]);
