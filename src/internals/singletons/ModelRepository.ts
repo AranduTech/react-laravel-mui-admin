@@ -49,9 +49,9 @@ export class ModelRepository {
 
                     if (typeof render === 'object' && 'element' in render) {
                         routes.push({
+                            ...render,
                             path: route(`admin.${className}.${action}`),
                             loader: render.loader || defaultLoader,
-                            element: render.element,
                         });
                         return;
                     }
@@ -72,9 +72,9 @@ export class ModelRepository {
 
                     if (typeof render === 'object' && 'element' in render) {
                         routes.push({
+                            ...render,
                             path: route(`admin.${className}.${action}`),
                             loader: render.loader || defaultLoader,
-                            element: render.element,
                         });
                         return;
                     }
