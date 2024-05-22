@@ -39,8 +39,9 @@ const RepositoryIndex = () => {
 
             <Stack
                 direction={isFull ? 'row' : 'column-reverse'}
-                justifyContent={modelTabs.length > 0 ? 'space-between' : 'flex-end'}
                 alignItems="center"
+                justifyContent={modelTabs.length > 0 ? 'space-between' : 'flex-end'}
+                mb={1.5}
             >
                 {modelTabs.length > 0 && (
                     <Tabs
@@ -63,6 +64,7 @@ const RepositoryIndex = () => {
                         ))}
                     </Tabs>
                 )}
+
                 <ActionButton 
                     isFull={isFull}
                     setSearchParams={setSearchParams}
