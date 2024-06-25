@@ -282,8 +282,6 @@ export class BaseModel {
             ? false
             : { id: this.id });
 
-
-
         return new Promise((resolve) => {
             if (!url) {
                 resolve(false);

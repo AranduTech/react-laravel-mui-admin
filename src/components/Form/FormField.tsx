@@ -20,7 +20,11 @@ const fieldTypeMapping: { [key: string]: React.ElementType } = {
 };
 
 const FormField = ({ form, field, wrapper: WrapperComponent }: FormFieldProps & { wrapper: React.ElementType }) => {
-    const { type = 'text', gridItem = { xs: 12 } } = field;
+    const { 
+        type = 'text', 
+        gridItem = { xs: 12 }, 
+        slotProps = {}, 
+    } = field;
 
     const filteredFieldTypeMapping = useApplyFilters('form_field_type_mapping', fieldTypeMapping);
 
@@ -41,6 +45,9 @@ const FormField = ({ form, field, wrapper: WrapperComponent }: FormFieldProps & 
             <RenderedField
                 form={form}
                 field={field}
+                inputProps={{
+                    ...slotProps, 
+                }}
             />
         </WrapperComponent>
     );
