@@ -29,7 +29,6 @@ export type ModelAction = {
 
 type ActionButtonProps = {
     overrideClassName?: string;
-    useNewItem?: boolean;
     setSearchParams: SetURLSearchParams;
     slotProps?: {
         ButtonGroup?: ButtonGroupOwnProps;
@@ -55,7 +54,6 @@ const SpeedDial = styled(MuiSpeedDial)(({ theme }) => ({
 
 const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
     overrideClassName = null,
-    useNewItem = true,
     setSearchParams,
     slotProps = {},
     isFull = true,
@@ -75,17 +73,15 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
 
     const preOptions = useApplyFilters(
         'repository_index_model_actions',
-        useNewItem
-            ? [{
-                label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
-                callback: () => doAction(
-                    'repository_index_new_item',
-                    className,
-                    { navigate, setSearchParams }
-                ),
-                icon: 'add',
-            }]
-            : [],
+        [{
+            label: `${t('common.new')} ${t(`models.${className}.singular`)}`,
+            callback: () => doAction(
+                'repository_index_new_item',
+                className,
+                { navigate, setSearchParams }
+            ),
+            icon: 'add',
+        }], 
         className,
     );
 
@@ -130,34 +126,38 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
 
     return (
         <>
-            <ButtonGroup 
-                variant="contained"
-                ref={anchorRef}
-                aria-label="split button"
-                sx={{ display: isFull ? 'flex' : 'none' }}
-                {...ButtonGroupProps}
-            >
-                <Button
-                    {...ButtonProps}
-                    onClick={() => handleSplitButtonClick(options[selectedIndex].callback)}
+            {options.length > 0 && (
+                <ButtonGroup 
+                    variant="contained"
+                    ref={anchorRef}
+                    aria-label="split button"
+                    sx={{ display: isFull ? 'flex' : 'none' }}
+                    {...ButtonGroupProps}
                 >
-                    {options[selectedIndex].label}
-                </Button>
-                {options.length > 1 && (
                     <Button
-                        variant="contained"
-                        size="small"
-                        aria-controls={open ? 'split-button-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-label="select model action"
-                        aria-haspopup="menu"
                         {...ButtonProps}
-                        onClick={handleSplitMenuToggle}
+                        onClick={() => handleSplitButtonClick(options[selectedIndex].callback)}
                     >
-                        <Icon name="arrowDropDown" />
+                        {options[selectedIndex].label}
                     </Button>
-                )}
-            </ButtonGroup>
+
+                    {options.length > 1 && (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            aria-controls={open ? 'split-button-menu' : undefined}
+                            aria-expanded={open ? 'true' : undefined}
+                            aria-label="select model action"
+                            aria-haspopup="menu"
+                            {...ButtonProps}
+                            onClick={handleSplitMenuToggle}
+                        >
+                            <Icon name="arrowDropDown" />
+                        </Button>
+                    )}
+                </ButtonGroup>
+            )}
+
             <Popper
                 sx={{ zIndex: 9 }}
                 open={open}
@@ -193,6 +193,7 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
                     </Grow>
                 )}
             </Popper>
+
             {options.length === 1 && (
                 <Fab 
                     color="primary" 
@@ -206,6 +207,7 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = ({
                     <Icon name={options[0].icon || 'add'} />
                 </Fab>
             )}
+
             {options.length > 1 && (
                 <SpeedDial
                     ariaLabel="select model action"

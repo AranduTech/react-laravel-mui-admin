@@ -22,7 +22,7 @@ const RepositoryIndex = () => {
         searchParams, modelTabs, modelMassActions, schema, setSearchParams,
         handleSearchSubmit, handleTabChange, handleMassActionSubmit, handleSort, handleApplyFilters,
         handleClickItem, handleSaveSuccess, tab, filters, order_by, handleCloseDrawer, open, setPage, setPerPage,
-        handleFormError, handleFormChange,
+        handleFormError, handleFormChange, 
     } = useRepositoryIndex();
 
     return (
@@ -87,6 +87,7 @@ const RepositoryIndex = () => {
                     <CircularProgress size={30} />
                 </Grid>
             </Grid>
+            
             <PaginatedTable
                 items={items}
                 columns={tableColumns}
