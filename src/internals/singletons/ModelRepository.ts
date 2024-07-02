@@ -147,7 +147,7 @@ export class ModelRepository {
 
                 return new Proxy(this, {
                     get: (target: Model, prop: string) => {
-                        if (prop in target) {
+                        if (prop in target || typeof prop !== 'string') {
                             if (typeof target[prop] === 'function') {
                                 return target[prop].bind(target);
                             }
