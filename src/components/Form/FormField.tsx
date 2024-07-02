@@ -19,13 +19,34 @@ const fieldTypeMapping: { [key: string]: React.ElementType } = {
     file: FileField,
 };
 
-const FormField = ({ form, field, wrapper: WrapperComponent }: FormFieldProps & { wrapper: React.ElementType }) => {
+function useTraceUpdate(props: any) {
+    const prev = React.useRef(props);
+
+    React.useEffect(() => {
+        const changedProps = Object.entries(props).reduce((ps: any, [k, v]) => {
+            if (prev.current[k] !== v) {
+                ps[k] = [prev.current[k], v];
+            }
+            return ps;
+        }, {});
+        if (Object.keys(changedProps).length > 0) {
+            console.log('Changed props:', changedProps);
+        }
+        prev.current = props;
+    });
+}
+
+const FormField = (props: FormFieldProps & { wrapper: React.ElementType }) => {
+    useTraceUpdate(props);
+
+    const { form, field, wrapper: WrapperComponent } = props;
+
     const { type = 'text', gridItem = { xs: 12 } } = field;
 
     const filteredFieldTypeMapping = useApplyFilters('form_field_type_mapping', fieldTypeMapping);
 
     if (config('app.debug')) {
-        if (!filteredFieldTypeMapping[type] && !['text', 'password', 'date', 'datetime-local'].includes(type)) {
+        if (!filteredFieldTypeMapping[type] && !['text', 'password', 'date', 'datetime-local', 'number'].includes(type)) {
             console.warn(`Field type "${type}" is not supported, falling back to "text"`);
             console.warn(`Supported types are: ${Object.keys(filteredFieldTypeMapping).join(', ')}`);
             console.warn(`There are currently ${macros.getFilters('form_field_type_mapping').length} filters for "form_field_type_mapping"`);
