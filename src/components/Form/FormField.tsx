@@ -29,9 +29,11 @@ function useTraceUpdate(props: any) {
             }
             return ps;
         }, {});
+
         if (Object.keys(changedProps).length > 0) {
             console.log('Changed props:', changedProps);
         }
+        
         prev.current = props;
     });
 }

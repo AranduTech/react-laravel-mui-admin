@@ -116,7 +116,9 @@ export const dotSetter = (obj: any, path: string, value: any) => {
             }
             return acc[key];
         }, obj);
+        
         lastObj[lastKey] = value;
+
         return obj;
     } catch (error) {
         console.error(error);
@@ -130,4 +132,59 @@ export const dotExists = (obj: any, path: string) => {
     } catch (error) {
         return false;
     }
+};
+
+export const typeOf = (data: object, keys: Array<string>) => keys.reduce((acc: Array<any>, key: string, index: number) => {
+    const reduced = (d: any, a: Array<object>, k: string, i: number) => {
+        const newData = d[k];
+
+        const isArray = Array.isArray(newData);
+        const isObject = typeof newData === 'object';
+    
+        const type = isArray ? 'array' : isObject ? 'object' : typeof newData;
+
+        a[i] = { 
+            key: k, 
+            type: type, 
+            data: newData, 
+        };
+
+        return a;
+    };
+
+    if (index === 0) {
+        return reduced(data, acc, key, index);
+    }
+
+    const prevData = acc[index - 1].data;
+
+    return reduced(prevData, acc, key, index);
+}, []);
+
+export const reduceKeysToNestedObject = (data: object, keys: Array<string>, value: any = null) => {
+
+    const type: Array<any> = typeOf(data, keys);
+
+    const reverseKeys = keys.reverse();
+
+    return reverseKeys.reduce((acc: any, key: string, index: number) => {
+        if (index === 0) {
+            return { [key]: value };
+        }
+        
+        const isArray = type.find((t) => t.key === key).type === 'array';
+
+        if (isArray) {
+            const resolve: Array<object> = [];
+
+            const firstKey: any = Object.keys(acc)[0];
+            const firstElement: any = acc[firstKey];
+
+            resolve[firstKey] = firstElement;
+
+            return { [key]: resolve };
+        }
+        
+        return { [key]: acc };
+    }, {});
 };

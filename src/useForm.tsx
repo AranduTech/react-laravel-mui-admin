@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { dotAccessor, dotExists, dotSetter } from './support/object';
+import { dotAccessor, dotExists, dotSetter, reduceKeysToNestedObject } from './support/object';
 
 import axios from 'axios';
 import {
@@ -140,12 +140,15 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
         }
 
         setData((data) => {
-            // const newData = structuredClone(data);
+
+            const keys = key.split('.');
+
+            const modifiableData = reduceKeysToNestedObject(data, keys, value);
 
             const transfer = applyFilters(
                 'use_form_clone_transfers',
                 [],
-                { formId, data, key, value }
+                { formId, data: modifiableData, key, value }
             );
 
             if (debug) {
@@ -155,7 +158,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
                 }
             }
             
-            const newData = structuredClone(data, { transfer });
+            const newData = structuredClone(modifiableData, { transfer });
 
             dotSetter(newData, key, value);
 
@@ -166,7 +169,7 @@ const useForm = (options: UseFormOptions = {}, dependencies: any[] = []): UseFor
             const changeEvent = {
                 key,
                 value,
-                previous: data,
+                previous: modifiableData,
                 data: newData,
             };
 
