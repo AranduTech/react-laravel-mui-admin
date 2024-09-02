@@ -66,6 +66,7 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         setSearchParams(() => {
             const { searchParams } = new URL(document.location.toString());
             searchParams.set('tab', value);
+            searchParams.set('page', '1');
             return searchParams;
         }, { replace: true });
     }, [setSearchParams]);
@@ -90,6 +91,7 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         setSearchParams(() => {
             const { searchParams } = new URL(document.location.toString());
             searchParams.set('q', value);
+            searchParams.set('page', '1');
             return searchParams;
         }, { replace: true });
     }, [setSearchParams]);
@@ -98,6 +100,7 @@ const useFetchList = (Model: typeof ModelClass, options?: UseFetchListOptions) =
         setSearchParams(() => {
             const { searchParams } = new URL(document.location.toString());
             searchParams.set('filters', JSON.stringify(value));
+            searchParams.set('page', '1');
             return searchParams;
         }, { replace: true });
     }, [setSearchParams]);
