@@ -64,7 +64,11 @@ const useFetchList = (Model: typeof ModelClass, options: UseFetchListOptions = {
     );
 
     const setTab = React.useCallback((value: string) => {
-        setQuery((prev) => ({ ...prev, tab: value }));
+        setQuery((prev) => ({
+            ...prev,
+            tab: value,
+            page: '1',
+        }));
     }, []);
 
     const setPage = React.useCallback((value: string) => {
@@ -76,11 +80,19 @@ const useFetchList = (Model: typeof ModelClass, options: UseFetchListOptions = {
     }, []);
 
     const setSearch = React.useCallback((value: string) => {
-        setQuery((prev) => ({ ...prev, q: value }));
+        setQuery((prev) => ({
+            ...prev,
+            q: value,
+            page: '1',
+        }));
     }, []);
 
     const setFilters = React.useCallback((value: any) => {
-        setQuery((prev) => ({ ...prev, filters: JSON.stringify(value) }));
+        setQuery((prev) => ({
+            ...prev,
+            filters: JSON.stringify(value),
+            page: '1',
+        }));
     }, []);
 
     const setOrderBy = React.useCallback((value: string) => {
